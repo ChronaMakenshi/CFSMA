@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html class="html">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>
+			{% block title %}Welcome!
+			{% endblock %}
+		</title>
+		<link
+		rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+		{# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+		{% block stylesheets %}
+			{{ encore_entry_link_tags('app') }}
+		{% endblock %}
+
+		{% block javascripts %}
+			{{ encore_entry_script_tags('app') }}
+		{% endblock %}
+	</head>
+	<body class="fond main">
+		<h1 class="text-white display-1 fw-bolder">PROJET VESUNNA</h1>
+		<div class="container-fluid d-flex justify-content-center">
+			<main>
+				<div class="bg-opacity-dark p-2 rounded-3 border border-2 mt-3 col-12">
+					<form class="login-form" action="" method='POST' enctype="multipart/form-data">
+						<div class="form-group">
+							<label class="text-white my-2" for="login">Identifiant :</label>
+							<input class="form-control" type="text" id="login" name="login">
+						</div>
+						<div class="form-group">
+							<label class="text-white my-2" for="passwd">Mot de passe :</label>
+							<input class="form-control" type="password" id="passwd" name="passwd">
+						</div>
+						<button type="submit" class="btn btn-outline-dark bg-primary m-3">Login</button>
+					</form>
+					<div>
+						<p class="text-white">En cas de problème de connexion vous pouvez rédiger un ticket
+							<a class="text-decoration-none text-primary" href="#">ici</a>
+						</p>
+					</div>
+				</div>
+			</main>
+		</div>
+		<img class="w-5 rounded-circle me-2 mt-5" src="{{ asset('build/images/image0.png') }}" alt="">
+		<footer
+			class=" container-fluid bg-dark text-center text-white">
+			<!-- Grid container -->
+			<div
+				class="container p-2 pb-0 ">
+				<!-- Section: Social media -->
+				<section>
+					<div class="col-md-auto">
+						<img width="40" height="50" src="{{ asset('build/images/logo.994dcb64.png') }}" alt=" "/>
+					</div>
+					<div class=" text-center">
+						<P>Cours des stagiaires du CFSMA, made with some ❤️ and ☕.</p>
+					</div>
+				</section>
+				<!-- Section: Social media -->
+			</div>
+			<!-- Grid container -->
+
+			<!-- Copyright -->
+			<div class="text-center p-1">
+				<a class="btn btn-footer text-white" target="_blank" href="http://php.net">Powered with PHP</a>
+				-
+				<a class="btn btn-footer text-white" href="">Documentation</a>
+			</div>
+			<!-- Copyright -->
+		</footer>
+	</body>
+</html>

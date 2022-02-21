@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>
+			{% block title %}Welcome!
+			{% endblock %}
+		</title>
+		<link
+		rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+		{# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+		{% block stylesheets %}
+			{{ encore_entry_link_tags('app') }}
+		{% endblock %}
+
+		{% block javascripts %}
+			{{ encore_entry_script_tags('app') }}
+		{% endblock %}
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+			<div class="container-fluid">
+				<a class="w-5" href="{{ path('index') }}"><img class="w-50 rounded-circle me-2" src="{{ asset('build/images/image0.png') }}" alt=""></a>
+				<a class="navbar-brand text-white" href="{{ path('index') }}">Projet VESUNNA</a>
+				<button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarText">
+					<ul class="navbar-nav me-auto">
+						<li class="nav-item dropdown" id="myDropdown">
+							<a class="nav-link dropdown-toggle text-light" data-bs-toggle="dropdown">
+								Administration
+							</a>
+							<ul class="dropdown-menu bg-dark">
+								<li>
+									<a class="dropdown-item text-light" href="{{ path('addUsers') }}">
+										Gestion Utilisateurs
+									</a>
+								</li>
+								<li>
+									<a class="dropdown-item text-light" href="#">
+										Gestion Régiment &raquo;
+									</a>
+									<ul class="submenu dropdown-menu bg-dark">
+										<li>
+											<a class="dropdown-item text-light" href="{{ path('addcompagnie') }}">Ajouter Compagnie</a>
+										</li>
+										<li>
+											<a class="dropdown-item text-light" href="{{ path('addsection') }}">Ajouter Section</a>
+										</li>
+										<li>
+											<a class="dropdown-item text-light" href="{{ path('addfiliere') }}">Ajouter Filière</a>
+										</li>
+										<li>
+											<a class="dropdown-item text-light" href="{{ path('addformateur') }}">Ajouter Formateur</a>
+										</li>
+										<li>
+											<a class="dropdown-item text-light" href="{{ path('addstagiaire') }}">Ajouter Stagiaire</a>
+										</li>
+										<li>
+											<a class="dropdown-item text-light" href="{{ path('addcohorte') }}">Ajouter Cohorte</a>
+										</li>
+										<li>
+											<a class="dropdown-item text-light" href="{{ path('addmatiere') }}">Ajouter Matière</a>
+										</li>
+										<li>
+											<a class="dropdown-item text-light" href="{{ path('addcours') }}">Ajouter Cours</a>
+										</li>
+										<li>
+											<a class="dropdown-item text-light" href="{{ path('addmatierepublic') }}">Ajouter Matière Public</a>
+										</li>
+										<li>
+											<a class="dropdown-item text-light" href="{{ path('addcourspublic') }}">Ajouter Cours Public</a>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-light" href="{{ path('pagedescoursp') }}">Public</a>
+						</li>
+					</ul>
+					<span class="navbar-text">
+						<a class="nav-link text-light" href="{{ path('connexion') }}">Déconnexion</a>
+					</span>
+				</div>
+			</div>
+		</nav>
+		<main class="m-5"> {% block main %}{% endblock %}
+			</main>
+			<footer
+				class="container-fluid bg-dark text-center text-white">
+				<!-- Grid container -->
+				<div
+					class="container p-2 pb-0 ">
+					<!-- Section: Social media -->
+					<section>
+						<div class="col-md-auto">
+							<img width="40" height="50" src="{{ asset('build/images/logo.994dcb64.png') }}" alt=" "/>
+						</div>
+						<div class=" text-center">
+							<P>Cours des stagiaires du CFSMA, made with some ❤️ and ☕.</p>
+						</div>
+					</section>
+					<!-- Section: Social media -->
+				</div>
+				<!-- Grid container -->
+
+				<!-- Copyright -->
+				<div class="text-center p-1">
+					<a class="btn btn-footer text-white" target="_blank" href="http://php.net">Powered with PHP</a>
+					-
+					<a class="btn btn-footer text-white" href="/about">Documentation</a>
+				</div>
+				<!-- Copyright -->
+			</footer>
+		</body>
+	</html>

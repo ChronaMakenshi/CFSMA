@@ -1,0 +1,50 @@
+{% extends "base.html.twig" %}
+{% form_theme formCompagnie 'bootstrap_5_layout.html.twig' %}
+{% block main %}
+	<section class="d-flex justify-content-between">
+		{{ form_start(formCompagnie) }}
+		<h2 class="text-start my-5">
+			{% if EditMode %}
+				Modifier une Compagnie
+			{% else %}
+				Ajouter une Compagnie
+			{% endif %}
+		</h2>
+		<label for="exampleFormControlInput1" class="form-label">Nom de la compagnie :</label>
+		{{ form_row(formCompagnie.name)}}
+		<div class="d-flex justify-content-around mt-4">
+			<button type="submit" class="btn btn-primary btn-outline-success text-white">
+				{% if EditMode %}
+					Modifier
+				{% else %}
+					Enregistrer
+				{% endif %}
+			</button>
+			<button type="reset" class="btn btn-primary btn-outline-danger text-white">Annuler</button>
+		</div>
+		{{ form_end(formCompagnie) }}
+		<div class="w-75 my-auto">
+			<table class="table border border-3 table-bordered ">
+				<thead>
+					<tr class="bg-danger">
+						<th scope="col">Compagnie</th>
+						<th scope="col">Modifier / Supprimer</th>
+					</tr>
+				</thead>
+
+				{% for compagnie in compagnies %}
+					<tbody class="bg-dark text-white">
+						<tr>
+							<td>{{ compagnie.name }}</td>
+							<td>
+								<a class="text-decoration-none text-hover-success" href="/addcompagnie/{{ compagnie.id }}">Modifier</a>
+
+								<a class="text-decoration-none text-hover-danger" href="/addcompagnie/delete/{{ compagnie.id }}" onclick="return confirm('Supprimer ?')">Supprimer</a>
+							</td>
+						</tr>
+					</tbody>
+				{% endfor %}
+			</table>
+		</div>
+	</section>
+{% endblock %}

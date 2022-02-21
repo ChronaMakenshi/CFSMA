@@ -1,0 +1,51 @@
+$light: rgba(160, 160, 160, 0.555);
+$white: #fff;
+$danger: #dc3545;
+$cyan: #17a2b8;
+
+
+$utilities: (
+  "opacity": (
+    property: opacity,
+    values: (
+      0: 0,
+      25: .25,
+      50: .5,
+      75: .75,
+      85: .85,
+      100: 1,
+    )
+  ),
+  "width": (
+      property: width,
+      class: w,
+      values: (
+        3: 3%,
+        5: 5%,
+        25: 25%,
+        50: 50%,
+        75: 75%,
+        100: 100%,
+        auto: auto
+      )
+    )
+);
+
+.bg-opacity-dark {
+	background-color: rgba(0, 0, 0, 0.658),
+  }
+
+  .text-hover-success {
+    color: $white;
+  }
+  .text-hover-danger {
+    color: $white;
+  }
+  .text-hover-success:hover {
+    color: $cyan;
+  }
+    
+  .text-hover-danger:hover {
+    color: $danger;
+  }
+  
