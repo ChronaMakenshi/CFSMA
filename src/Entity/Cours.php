@@ -28,19 +28,15 @@ class Cours
     private $date;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity=Matieres::class, inversedBy="cours")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $matiere_id;
+    private $matiere;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity=Classes::class, inversedBy="cours")
      */
-    private $classe_id;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $visible;
+    private $classe;
 
     public function getId(): ?int
     {
@@ -71,38 +67,26 @@ class Cours
         return $this;
     }
 
-    public function getMatiereId(): ?int
+    public function getMatiere(): ?Matieres
     {
-        return $this->matiere_id;
+        return $this->matiere;
     }
 
-    public function setMatiereId(int $matiere_id): self
+    public function setMatiere(?Matieres $matiere): self
     {
-        $this->matiere_id = $matiere_id;
+        $this->matiere = $matiere;
 
         return $this;
     }
 
-    public function getClasseId(): ?int
+    public function getClasse(): ?Classes
     {
-        return $this->classe_id;
+        return $this->classe;
     }
 
-    public function setClasseId(int $classe_id): self
+    public function setClasse(?Classes $classe): self
     {
-        $this->classe_id = $classe_id;
-
-        return $this;
-    }
-
-    public function getVisible(): ?int
-    {
-        return $this->visible;
-    }
-
-    public function setVisible(int $visible): self
-    {
-        $this->visible = $visible;
+        $this->classe = $classe;
 
         return $this;
     }

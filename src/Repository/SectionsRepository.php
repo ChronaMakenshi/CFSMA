@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\Section;
+use App\Entity\Sections;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Section|null find($id, $lockMode = null, $lockVersion = null)
- * @method Section|null findOneBy(array $criteria, array $orderBy = null)
- * @method Section[]    findAll()
- * @method Section[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Sections|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Sections|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Sections[]    findAll()
+ * @method Sections[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class SectionRepository extends ServiceEntityRepository
+class SectionsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Section::class);
+        parent::__construct($registry, Sections::class);
     }
 
     // /**
-    //  * @return Section[] Returns an array of Section objects
+    //  * @return Sections[] Returns an array of Sections objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class SectionRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Section
+    public function findOneBySomeField($value): ?Sections
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.exampleField = :val')

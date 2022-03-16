@@ -10,6 +10,11 @@
 				Ajouter une Compagnie
 			{% endif %}
 		</h2>
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success">
+				{{ message }}
+			</div>
+		{% endfor %}
 		<label for="exampleFormControlInput1" class="form-label">Nom de la compagnie :</label>
 		{{ form_row(formCompagnie.name)}}
 		<div class="d-flex justify-content-around mt-4">
@@ -20,7 +25,7 @@
 					Enregistrer
 				{% endif %}
 			</button>
-			<button type="reset" class="btn btn-primary btn-outline-danger text-white">Annuler</button>
+			<a href="/addcompagnie/" class="btn btn-primary btn-outline-danger text-white">Annuler</a>
 		</div>
 		{{ form_end(formCompagnie) }}
 		<div class="w-75 my-auto">
@@ -38,7 +43,7 @@
 							<td>{{ compagnie.name }}</td>
 							<td>
 								<a class="text-decoration-none text-hover-success" href="/addcompagnie/{{ compagnie.id }}">Modifier</a>
-
+								/
 								<a class="text-decoration-none text-hover-danger" href="/addcompagnie/delete/{{ compagnie.id }}" onclick="return confirm('Supprimer ?')">Supprimer</a>
 							</td>
 						</tr>

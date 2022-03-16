@@ -1,40 +1,62 @@
 {% extends "base.html.twig" %}
+{% form_theme formSection 'bootstrap_5_layout.html.twig' %}
 {% block main %}
 	<section class="d-flex justify-content-between">
-		<div class="mx-auto">
-			<h2
-				class="text-start my-5">
-				{# Modifier #}
-				Ajouter une Compagnie
-			</h2>
-			<label for="exampleFormControlInput1" class="form-label">Nom de la Section :</label>
-			<input type="email" class="form-control" id="exampleFormControlInput1">
-
-			<label for="exampleFormControlInput1" class="form-label">Nom de la Compagnie :</label>
-			<input type="email" class="form-control" id="exampleFormControlInput1">
-
-			<div class="d-flex justify-content-around mt-4">
-				<button type="button" class="btn btn-primary btn-outline-success text-white">Ajouter</button>
-
-				<button type="button" class="btn btn-primary btn-outline-danger text-white">Annuler</button>
+		{{ form_start(formSection) }}
+		<h2 class="text-start my-5">
+			{% if EditMode %}
+				Modifier une Section
+			{% else %}
+				Ajouter une Section
+			{% endif %}
+		</h2>
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success">
+				{{ message }}
 			</div>
+		{% endfor %}
+		<label for="exampleFormControlInput1" class="form-label">Nom de la compagnie :</label>
+		{{ form_row(formSection.compagnie)}}
+		<label for="exampleFormControlInput1" class="form-label">Nom de la section :</label>
+		{{ form_row(formSection.name)}}
+		<div class="d-flex justify-content-around mt-4">
+			<button type="submit" class="btn btn-primary btn-outline-success text-white">
+				{% if EditMode %}
+					Modifier
+				{% else %}
+					Enregistrer
+				{% endif %}
+			</button>
+			<a href="/addsection/" class="btn btn-primary btn-outline-danger text-white">Annuler</a>
 		</div>
+		{{ form_end(formSection) }}
 		<div class="w-75 my-auto">
 			<table class="table border border-3 table-bordered ">
 				<thead>
 					<tr class="bg-danger">
 						<th scope="col">Compagnie</th>
 						<th scope="col">Section</th>
-						<th scope="col">Action</th>
+						<th scope="col">Modifier / Supprimer</th>
 					</tr>
 				</thead>
-				<tbody class="bg-dark text-white">
-					<tr>
-						<td>Mark</td>
-						<td>@fat</td>
-						<td>@fat</td>
-					</tr>
-				</tbody>
+
+				{% for compagnie in compagnies %}
+					{% for section in sections %}
+						{% if  section.compagnie.id == compagnie.id %}
+							<tbody class="bg-dark text-white">
+								<tr>
+									<td>{{ compagnie.name }}</td>
+									<td>{{ section.name }}</td>
+									<td>
+										<a class="text-decoration-none text-hover-success" href="/addsection/{{ section.id }}">Modifier</a>
+										/
+										<a class="text-decoration-none text-hover-danger" href="/addsection/delete/{{ section.id }}" onclick="return confirm('Supprimer ?')">Supprimer</a>
+									</td>
+								</tr>
+							</tbody>
+						{% endif %}
+					{% endfor %}
+				{% endfor %}
 			</table>
 		</div>
 	</section>

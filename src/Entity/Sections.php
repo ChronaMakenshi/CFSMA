@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\ClassesRepository;
+use App\Repository\SectionsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=ClassesRepository::class)
+ * @ORM\Entity(repositoryClass=SectionsRepository::class)
  */
-class Classes
+class Sections
 {
     /**
      * @ORM\Id
@@ -25,24 +25,24 @@ class Classes
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Filieres::class, inversedBy="classes")
+     * @ORM\ManyToOne(targetEntity=Compagnies::class, inversedBy="sections")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $filiere;
+    private $compagnie;
 
     /**
-     * @ORM\OneToMany(targetEntity=Cours::class, mappedBy="classe")
+     * @ORM\OneToMany(targetEntity=Filieres::class, mappedBy="section")
      */
-    private $cours;
+    private $filieres;
 
     /**
-     * @ORM\OneToMany(targetEntity=Users::class, mappedBy="classe", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Users::class, mappedBy="section", orphanRemoval=true)
      */
     private $users;
 
     public function __construct()
     {
-        $this->cours = new ArrayCollection();
+        $this->filieres = new ArrayCollection();
         $this->users = new ArrayCollection();
     }
 
@@ -63,42 +63,42 @@ class Classes
         return $this;
     }
 
-    public function getFiliere(): ?Filieres
+    public function getCompagnie(): ?Compagnies
     {
-        return $this->filiere;
+        return $this->compagnie;
     }
 
-    public function setFiliere(?Filieres $filiere): self
+    public function setCompagnie(?Compagnies $compagnie): self
     {
-        $this->filiere = $filiere;
+        $this->compagnie = $compagnie;
 
         return $this;
     }
 
     /**
-     * @return Collection|Cours[]
+     * @return Collection|Filieres[]
      */
-    public function getCours(): Collection
+    public function getFilieres(): Collection
     {
-        return $this->cours;
+        return $this->filieres;
     }
 
-    public function addCour(Cours $cour): self
+    public function addFiliere(Filieres $filiere): self
     {
-        if (!$this->cours->contains($cour)) {
-            $this->cours[] = $cour;
-            $cour->setClasse($this);
+        if (!$this->filieres->contains($filiere)) {
+            $this->filieres[] = $filiere;
+            $filiere->setSection($this);
         }
 
         return $this;
     }
 
-    public function removeCour(Cours $cour): self
+    public function removeFiliere(Filieres $filiere): self
     {
-        if ($this->cours->removeElement($cour)) {
+        if ($this->filieres->removeElement($filiere)) {
             // set the owning side to null (unless already changed)
-            if ($cour->getClasse() === $this) {
-                $cour->setClasse(null);
+            if ($filiere->getSection() === $this) {
+                $filiere->setSection(null);
             }
         }
 
@@ -117,7 +117,7 @@ class Classes
     {
         if (!$this->users->contains($user)) {
             $this->users[] = $user;
-            $user->setClasse($this);
+            $user->setSection($this);
         }
 
         return $this;
@@ -127,8 +127,8 @@ class Classes
     {
         if ($this->users->removeElement($user)) {
             // set the owning side to null (unless already changed)
-            if ($user->getClasse() === $this) {
-                $user->setClasse(null);
+            if ($user->getSection() === $this) {
+                $user->setSection(null);
             }
         }
 

@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\CourspublicsRepository;
+use App\Repository\CourpublicsRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=CourspublicsRepository::class)
+ * @ORM\Entity(repositoryClass=CourpublicsRepository::class)
  */
-class Courspublics
+class Courpublics
 {
     /**
      * @ORM\Id
@@ -28,9 +28,10 @@ class Courspublics
     private $date;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity=Matierepublics::class, inversedBy="courpublics")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $matierepublic_id;
+    private $matierepublic;
 
     public function getId(): ?int
     {
@@ -61,14 +62,14 @@ class Courspublics
         return $this;
     }
 
-    public function getMatierepublicId(): ?int
+    public function getMatierepublic(): ?Matierepublics
     {
-        return $this->matierepublic_id;
+        return $this->matierepublic;
     }
 
-    public function setMatierepublicId(int $matierepublic_id): self
+    public function setMatierepublic(?Matierepublics $matierepublic): self
     {
-        $this->matierepublic_id = $matierepublic_id;
+        $this->matierepublic = $matierepublic;
 
         return $this;
     }

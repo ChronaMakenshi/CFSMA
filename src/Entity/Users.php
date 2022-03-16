@@ -20,32 +20,35 @@ class Users
     /**
      * @ORM\Column(type="text")
      */
-    private $Login;
+    private $login;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $Passwd;
+    private $passwd;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity=Roles::class, inversedBy="users")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $Role_id;
+    private $role;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity=Sections::class, inversedBy="users")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $Section_id;
+    private $section;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity=Classes::class, inversedBy="users")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $Filiere_id;
+    private $classe;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity=Filieres::class, inversedBy="users")
      */
-    private $Classe_id;
+    private $filiere;
 
     public function getId(): ?int
     {
@@ -54,72 +57,72 @@ class Users
 
     public function getLogin(): ?string
     {
-        return $this->Login;
+        return $this->login;
     }
 
-    public function setLogin(string $Login): self
+    public function setLogin(string $login): self
     {
-        $this->Login = $Login;
+        $this->login = $login;
 
         return $this;
     }
 
     public function getPasswd(): ?string
     {
-        return $this->Passwd;
+        return $this->passwd;
     }
 
-    public function setPasswd(string $Passwd): self
+    public function setPasswd(string $passwd): self
     {
-        $this->Passwd = $Passwd;
+        $this->passwd = $passwd;
 
         return $this;
     }
 
-    public function getRoleId(): ?int
+    public function getRole(): ?Roles
     {
-        return $this->Role_id;
+        return $this->role;
     }
 
-    public function setRoleId(int $Role_id): self
+    public function setRole(?Roles $role): self
     {
-        $this->Role_id = $Role_id;
+        $this->role = $role;
 
         return $this;
     }
 
-    public function getSectionId(): ?int
+    public function getSection(): ?Sections
     {
-        return $this->Section_id;
+        return $this->section;
     }
 
-    public function setSectionId(int $Section_id): self
+    public function setSection(?Sections $section): self
     {
-        $this->Section_id = $Section_id;
+        $this->section = $section;
 
         return $this;
     }
 
-    public function getFiliereId(): ?int
+    public function getClasse(): ?Classes
     {
-        return $this->Filiere_id;
+        return $this->classe;
     }
 
-    public function setFiliereId(?int $Filiere_id): self
+    public function setClasse(?Classes $classe): self
     {
-        $this->Filiere_id = $Filiere_id;
+        $this->classe = $classe;
 
         return $this;
     }
 
-    public function getClasseId(): ?int
+    public function getFiliere(): ?Filieres
     {
-        return $this->Classe_id;
+        return $this->filiere;
     }
 
-    public function setClasseId(?int $Classe_id): self
+    public function setFiliere(?Filieres $filiere): self
     {
-        $this->Classe_id = $Classe_id;
+        $this->filiere = $filiere;
 
         return $this;
     }
