@@ -1,0 +1,68 @@
+{% extends "base.html.twig" %}
+{% form_theme formCohorte 'bootstrap_5_layout.html.twig' %}
+{% block main %}
+	<section class="d-flex justify-content-between">
+		{{ form_start(formCohorte) }}
+		<h2 class="text-start my-5">
+			{% if EditMode %}
+				Modifier une Cohorte
+			{% else %}
+				Ajouter une Cohorte
+			{% endif %}
+		</h2>
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success">
+				{{ message }}
+			</div>
+		{% endfor %}
+		<label for="exampleFormControlInput1" class="form-label">Nom de la Cohorte:</label>
+		{{ form_row(formCohorte.name)}}
+		<label for="exampleFormControlInput1" class="form-label">Nom de la Section/Cohorte :</label>
+		{{ form_row(formCohorte.filiere) }}
+		<div class="d-flex justify-content-around mt-4">
+			<button type="submit" class="btn btn-primary btn-outline-success text-white">
+				{% if EditMode %}
+					Modifier
+				{% else %}
+					Enregistrer
+				{% endif %}
+			</button>
+			<a href="/addcohorte/" class="btn btn-primary btn-outline-danger text-white">Annuler</a>
+		</div>
+		{{ form_end(formCohorte) }}
+		<div class="w-75 my-auto">
+			<table class="table border border-3 table-bordered ">
+				<thead>
+					<tr class="bg-danger">
+						<th scope="col">Section</th>
+						<th scope="col">Filière</th>
+						<th scope="col">Cohorte</th>
+						<th scope="col">Action</th>
+					</tr>
+				</thead>
+				{% for section in sections %}
+					{% for filiere in filieres %}
+						{% if  filiere.section.id == section.id %}
+							{% for cohorte in cohortes %}
+								{% if cohorte.filiere.id == filiere.id %}
+									<tbody class="bg-dark text-white">
+										<tr>
+											<td>{{ section.name }}</td>
+											<td>{{ filiere.name }}</td>
+											<td>{{ cohorte.name }}</td>
+											<td>
+												<a class="text-decoration-none text-hover-success" href="/addcohorte/{{ cohorte.id }}">Modifier</a>
+												/
+												<a class="text-decoration-none text-hover-danger" href="/addcohorte/delete/{{ cohorte.id }}" onclick="return confirm('Supprimer ?')">Supprimer</a>
+											</td>
+										</tr>
+									</tbody>
+								{% endif %}
+							{% endfor %}
+						{% endif %}
+					{% endfor %}
+				{% endfor %}
+			</table>
+		</div>
+	</section>
+{% endblock %}

@@ -5,10 +5,13 @@ namespace App\Entity;
 use App\Repository\SectionsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=SectionsRepository::class)
+ * @UniqueEntity("compagnie", message="cette section est déjà présent dans cette compagnie")
  */
 class Sections
 {
@@ -21,6 +24,7 @@ class Sections
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(min=2, max=20,minMessage = "Votre message a moins que {{ limit }} caractères", maxMessage = "Votre message a plus que {{ limit }} caractères")
      */
     private $name;
 

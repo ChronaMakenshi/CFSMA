@@ -1,0 +1,6 @@
+{% extends "base.html.twig" %}
+{% block main %}
+	{% for matierepublic in matierepublics %}
+		<a class="btn btn-dark btn-lg m-3 fs-1" href="#" role="button">{{ matierepublic.name }}</a>
+	{% endfor %}
+{% endblock %}

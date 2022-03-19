@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ClassesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,6 +22,7 @@ class Classes
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(min=3, max=20,minMessage = "Votre message a moins que {{ limit }} caractères", maxMessage = "Votre message a plus que {{ limit }} caractères")
      */
     private $name;
 
@@ -31,14 +33,16 @@ class Classes
     private $filiere;
 
     /**
+     * @ORM\OneToMany(targetEntity=Users::class, mappedBy="classe", orphanRemoval=true)
+     */
+    private $users;
+
+    /**
      * @ORM\OneToMany(targetEntity=Cours::class, mappedBy="classe")
      */
     private $cours;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Users::class, mappedBy="classe", orphanRemoval=true)
-     */
-    private $users;
+  
 
     public function __construct()
     {
@@ -76,6 +80,36 @@ class Classes
     }
 
     /**
+     * @return Collection|Users[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(Users $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->setClasse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(Users $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getClasse() === $this) {
+                $user->setClasse(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return Collection|Cours[]
      */
     public function getCours(): Collection
@@ -105,33 +139,5 @@ class Classes
         return $this;
     }
 
-    /**
-     * @return Collection|Users[]
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    public function addUser(Users $user): self
-    {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->setClasse($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(Users $user): self
-    {
-        if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getClasse() === $this) {
-                $user->setClasse(null);
-            }
-        }
-
-        return $this;
-    }
+   
 }

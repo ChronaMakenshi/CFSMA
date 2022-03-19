@@ -4,11 +4,14 @@ namespace App\Entity;
 
 use App\Repository\CompagniesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=CompagniesRepository::class)
+ * @UniqueEntity("name", message="cette section est déjà présent")
  */
 class Compagnies
 {
@@ -21,6 +24,7 @@ class Compagnies
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Assert\Length(min=2, max=20,minMessage = "Votre message a moins que {{ limit }} caractères", maxMessage = "Votre message a plus que {{ limit }} caractères")
      */
     private $name;
 

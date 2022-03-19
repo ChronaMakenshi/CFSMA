@@ -33,6 +33,16 @@ class Courpublics
      */
     private $matierepublic;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $PDF;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $visible;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -70,6 +80,30 @@ class Courpublics
     public function setMatierepublic(?Matierepublics $matierepublic): self
     {
         $this->matierepublic = $matierepublic;
+
+        return $this;
+    }
+
+    public function getPDF(): ?string
+    {
+        return $this->PDF;
+    }
+
+    public function setPDF(string $PDF): self
+    {
+        $this->PDF = $PDF;
+
+        return $this;
+    }
+
+    public function getVisible(): ?int
+    {
+        return $this->visible;
+    }
+
+    public function setVisible(int $visible): self
+    {
+        $this->visible = $visible;
 
         return $this;
     }

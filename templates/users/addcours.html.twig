@@ -1,0 +1,88 @@
+{% extends "base.html.twig" %}
+{% form_theme formCours 'bootstrap_5_layout.html.twig' %}
+{% block main %}
+	<section class="d-flex justify-content-between">
+		{{ form_start(formCours) }}
+		<h2 class="text-start">
+			{% if EditMode %}
+				Modifier une Cours
+			{% else %}
+				Ajouter une Cours
+			{% endif %}
+		</h2>
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success">
+				{{ message }}
+			</div>
+		{% endfor %}
+		<label for="exampleFormControlInput1" class="form-label">Nom du Cours:</label>
+		{{ form_row(formCours.name)}}
+		<label for="exampleFormControlInput1" class="form-label">Fichier du Cours:</label>
+		{{ form_row(formCours.pdf) }}
+		<label for="exampleFormControlInput1" class="form-label">Nom de la Filière/Cohorte :</label>
+		{{ form_row(formCours.classe) }}
+		<label for="exampleFormControlInput1" class="form-label">Nom de la Matière :</label>
+		{{ form_row(formCours.matiere) }}
+		<label for="exampleFormControlInput1" class="form-label">Nom de la Date :</label>
+		{{ form_row(formCours.date) }}
+		{{ form_row(formCours.visible) }}
+
+		<div class="d-flex justify-content-around mt-2">
+			<button type="submit" class="btn btn-primary btn-outline-success text-white">
+				{% if EditMode %}
+					Modifier
+				{% else %}
+					Enregistrer
+				{% endif %}
+			</button>
+			<a href="/addcours/" class="btn btn-primary btn-outline-danger text-white">Annuler</a>
+		</div>
+		{{ form_end(formCours) }}
+		<div class="w-75 my-auto">
+			<table class="table border border-3 table-bordered ">
+				<thead>
+					<tr class="bg-danger">
+						<th scope="col">Filière</th>
+						<th scope="col">Cohorte</th>
+						<th scope="col">Matière</th>
+						<th scope="col">Cours</th>
+						<th scope="col">Action</th>
+						<th scope="col">Visibilité</th>
+						<th scope="col">Date</th>
+					</tr>
+				</thead>
+				{% for filiere in filieres %}
+					{% for cohorte in cohortes %}
+						{% if  cohorte.filiere.id == filiere.id %}
+							{% for matiere in matieres %}
+								{% for cour in cours %}
+									{% if cohorte.id == cour.classe.id %}
+										{% if matiere.id == cour.matiere.id %}
+											<tbody class="bg-dark text-white">
+												<tr>
+													<td>{{ filiere.name }}</td>
+													<td>{{ cohorte.name }}</td>
+													<td>{{ matiere.name }}</td>
+													<td>
+														<a href="/uploads/cours/{{ cour.pdf }}">{{ cour.name }}</a>
+													</td>
+													<td>
+														<a class="text-decoration-none text-hover-success" href="/addcours/{{ cour.id }}">Modifier</a>
+														/
+														<a class="text-decoration-none text-hover-danger" href="/addcours/delete/{{ cour.id }}" onclick="return confirm('Supprimer ?')">Supprimer</a>
+													</td>
+													<td>{{ cour.visible }}</td>
+													<td>{{ cour.date|date("d/m/Y") }}</td>
+												</tr>
+											</tbody>
+										{% endif %}
+									{% endif %}
+								{% endfor %}
+							{% endfor %}
+						{% endif %}
+					{% endfor %}
+				{% endfor %}
+			</table>
+		</div>
+	</section>
+{% endblock %}

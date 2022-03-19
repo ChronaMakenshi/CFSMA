@@ -4,11 +4,14 @@ namespace App\Entity;
 
 use App\Repository\MatieresRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=MatieresRepository::class)
+ * @UniqueEntity("name", message="cette matière est déjà présent")
  */
 class Matieres
 {
@@ -21,18 +24,25 @@ class Matieres
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(min=3, max=20,minMessage = "Votre message a moins que {{ limit }} caractères", maxMessage = "Votre message a plus que {{ limit }} caractères")
      */
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Cours::class, mappedBy="matiere", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Cours::class, mappedBy="matiere")
      */
     private $cours;
+
+
 
     public function __construct()
     {
         $this->cours = new ArrayCollection();
     }
+
+    /**
+     * @ORM\OneToMany(targetEntity=Cours::class, mappedBy="matiere", orphanRemoval=true)
+     */
 
     public function getId(): ?int
     {
@@ -80,4 +90,7 @@ class Matieres
 
         return $this;
     }
+
+   
+
 }

@@ -1,36 +1,53 @@
 {% extends "base.html.twig" %}
+{% form_theme formMatierepublic 'bootstrap_5_layout.html.twig' %}
 {% block main %}
 	<section class="d-flex justify-content-between">
-		<form action="" method="post" class="mx-auto">
-			<h2
-				class="text-start my-5">
-				{# Modifier #}
+		{{ form_start(formMatierepublic) }}
+		<h2 class="text-start my-5">
+			{% if EditMode %}
+				Modifier une Matière Public
+			{% else %}
 				Ajouter une Matière Public
-			</h2>
-			<label for="exampleFormControlInput1" class="form-label">Nom de la Matière Public :</label>
-			<input type="text" class="form-control" name="compagnie" id="exampleFormControlInput1" value="">
-
-			<div class="d-flex justify-content-around mt-4">
-				<button type="submit" class="btn btn-primary btn-outline-success text-white">
-					Ajouter
-				</button>
-				<button type="button" class="btn btn-primary btn-outline-danger text-white">Annuler</button>
+			{% endif %}
+		</h2>
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success">
+				{{ message }}
 			</div>
-		</form>
+		{% endfor %}
+		<label for="exampleFormControlInput1" class="form-label">Nom de la Matière Public:</label>
+		{{ form_row(formMatierepublic.name)}}
+		<div class="d-flex justify-content-around mt-4">
+			<button type="submit" class="btn btn-primary btn-outline-success text-white">
+				{% if EditMode %}
+					Modifier
+				{% else %}
+					Enregistrer
+				{% endif %}
+			</button>
+			<a href="/addmatierepublic/" class="btn btn-primary btn-outline-danger text-white">Annuler</a>
+		</div>
+		{{ form_end(formMatierepublic) }}
 		<div class="w-75 my-auto">
 			<table class="table border border-3 table-bordered ">
 				<thead>
 					<tr class="bg-danger">
-						<th scope="col">Matière</th>
+						<th scope="col">Matière Public</th>
 						<th scope="col">Modifier/Supprimé</th>
 					</tr>
 				</thead>
-				<tbody class="bg-dark text-white">
-					<tr>
-						<td></td>
-						<td></td>
-					</tr>
-				</tbody>
+				{% for matierepublic in matierepublics %}
+					<tbody class="bg-dark text-white">
+						<tr>
+							<td>{{ matierepublic.name }}</td>
+							<td>
+								<a class="text-decoration-none text-hover-success" href="/addmatierepublic/{{ matierepublic.id }}">Modifier</a>
+								/
+								<a class="text-decoration-none text-hover-danger" href="/addmatierepublic/delete/{{ matierepublic.id }}" onclick="return confirm('Supprimer ?')">Supprimer</a>
+							</td>
+						</tr>
+					</tbody>
+				{% endfor %}
 			</table>
 		</div>
 	</section>
