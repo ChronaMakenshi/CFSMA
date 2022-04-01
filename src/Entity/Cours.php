@@ -3,13 +3,17 @@
 namespace App\Entity;
 
 use App\Entity\Classes;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\CoursRepository;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Repository\CoursRepository;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @ORM\Entity(repositoryClass=CoursRepository::class)
  */
+
 class Cours
 {
     /**
@@ -25,13 +29,7 @@ class Cours
     private $name;
 
     /**
-     * @ORM\Column(type="text")
-     */
-
-    private $pdf;
-
-    /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="boolean")
      */
     private $visible;
 
@@ -50,6 +48,16 @@ class Cours
      */
     private $date;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CoursFiles::class, mappedBy="coursfile", orphanRemoval=true, cascade={"persist"})
+     */
+    private $coursFiles;
+
+    public function __construct()
+    {
+        $this->coursFiles = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -67,24 +75,12 @@ class Cours
         return $this;
     }
 
-    public function getPdf(): ?string
-    {
-        return $this->pdf;
-    }
-
-    public function setPdf(string $pdf): self
-    {
-        $this->pdf = $pdf;
-
-        return $this;
-    }
-
-    public function getVisible(): ?int
+    public function getVisible(): ?bool
     {
         return $this->visible;
     }
 
-    public function setVisible(int $visible): self
+    public function setVisible(bool $visible): self
     {
         $this->visible = $visible;
 
@@ -123,6 +119,36 @@ class Cours
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CoursFiles[]
+     */
+    public function getCoursFiles(): Collection
+    {
+        return $this->coursFiles;
+    }
+
+    public function addCoursFile(CoursFiles $coursFile): self
+    {
+        if (!$this->coursFiles->contains($coursFile)) {
+            $this->coursFiles[] = $coursFile;
+            $coursFile->setCoursfile($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCoursFile(CoursFiles $coursFile): self
+    {
+        if ($this->coursFiles->removeElement($coursFile)) {
+            // set the owning side to null (unless already changed)
+            if ($coursFile->getCoursfile() === $this) {
+                $coursFile->setCoursfile(null);
+            }
+        }
 
         return $this;
     }

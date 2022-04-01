@@ -5,9 +5,9 @@
 		{{ form_start(formCours) }}
 		<h2 class="text-start">
 			{% if EditMode %}
-				Modifier une Cours
+				Modifier un Cours
 			{% else %}
-				Ajouter une Cours
+				Ajouter un Cours
 			{% endif %}
 		</h2>
 		{% for message in app.flashes('success') %}
@@ -18,7 +18,7 @@
 		<label for="exampleFormControlInput1" class="form-label">Nom du Cours:</label>
 		{{ form_row(formCours.name)}}
 		<label for="exampleFormControlInput1" class="form-label">Fichier du Cours:</label>
-		{{ form_row(formCours.pdf) }}
+		{{ form_row(formCours.coursFiles) }}
 		<label for="exampleFormControlInput1" class="form-label">Nom de la Filière/Cohorte :</label>
 		{{ form_row(formCours.classe) }}
 		<label for="exampleFormControlInput1" class="form-label">Nom de la Matière :</label>
@@ -64,14 +64,27 @@
 													<td>{{ cohorte.name }}</td>
 													<td>{{ matiere.name }}</td>
 													<td>
-														<a href="/uploads/cours/{{ cour.pdf }}">{{ cour.name }}</a>
+														<h5 class="text-decoration-underline">{{ cour.name }}</h5>
+														{% for coursfile in cour.coursfiles %}
+															<a class="text-decoration-none" href="/uploads/cours/{{ coursfile.name }}">{{ coursfile.name }}</a><br>
+															{% if app.request.attributes.get('_route') == 'addcoursEdit' %}
+																<a class="text-decoration-none text-hover-danger" href="{{ path('cours_delete_fichier', {id: coursfile.id} )}}" data-delete data-token="{{ csrf_token('delete' ~ coursfile.id )}}">Supprimer</a>
+																<br>
+															{% endif %}
+														{% endfor %}
 													</td>
 													<td>
-														<a class="text-decoration-none text-hover-success" href="/addcours/{{ cour.id }}">Modifier</a>
+														<a class="text-decoration-none text-hover-success" href="{{ path('addcoursEdit', {id: cour.id} )}}">Modifier</a>
 														/
-														<a class="text-decoration-none text-hover-danger" href="/addcours/delete/{{ cour.id }}" onclick="return confirm('Supprimer ?')">Supprimer</a>
+														<a class="text-decoration-none text-hover-danger" href="{{ path('addcoursdelete', {id: cour.id} )}}">Supprimer</a>
 													</td>
-													<td>{{ cour.visible }}</td>
+													<td>
+														{% if  cour.visible  is same as(true) %}
+															Visible
+														{% else %}
+															Non-Visible
+														{% endif %}
+													</td>
 													<td>{{ cour.date|date("d/m/Y") }}</td>
 												</tr>
 											</tbody>

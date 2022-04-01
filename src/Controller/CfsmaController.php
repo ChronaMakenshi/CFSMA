@@ -9,21 +9,25 @@ use App\Entity\Filieres;
 use App\Entity\Matieres;
 use App\Entity\Sections;
 use App\Entity\Compagnies;
+use App\Entity\CoursFiles;
 use App\Entity\Matierepublics;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use App\Repository\SectionsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\All;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
 
 class CfsmaController extends AbstractController
 {
@@ -265,7 +269,7 @@ class CfsmaController extends AbstractController
 
    /**
    * @Route("/addcohorte/", name="addcohorte")
-   * 
+   * @Route("/addcohorte/{id}", name="addcohorteEdit")
    */
 
   public function ajoutecohorte(Classes $cohorte = null,Request $request,ManagerRegistry $coh, EntityManagerInterface $manager): Response
@@ -429,7 +433,6 @@ public function deletecohorte(int $id, Classes $cohorte, ManagerRegistry $coh,  
 
    /**
    * @Route("/addcours/", name="addcours")
-   * @Route("/addcours/{id}", name="addcoursEdit")
    */
 
   public function ajoutecours(Cours $cour = null,Request $request,ManagerRegistry $cou, EntityManagerInterface $manager, SluggerInterface $slugger): Response
@@ -438,14 +441,37 @@ public function deletecohorte(int $id, Classes $cohorte, ManagerRegistry $coh,  
     $cohortes = $cou->getRepository(Classes::class)->findAll();
     $filieres = $cou->getRepository(filieres::class)->findAll();
     $matieres= $cou->getRepository(Matieres::class)->findAll();
+    $coursfiles= $cou->getRepository(CoursFiles::class)->findAll();
 
     if(!$cour){
       $cour = new Cours;
     } 
 
     $form = $this->createFormBuilder($cour)
-                  ->add('name', TextType::class, array('label' => false))
-                  ->add('pdf', FileType::class, array('label' => false))
+                  ->add('name', TextType::class, [ 
+                    'label' => false,
+                  ])
+                  ->add('coursFiles', FileType::class, [
+                    'label' => false,
+                    'constraints' => [
+                      new All([
+                        new File([
+                          "maxSize" => "10M",
+                          "mimeTypes" => [
+                              "application/pdf",
+                              "video/x-msvideo",
+                              "video/mpeg",
+                              "application/zip",
+                              "application/x-rar-compressed"
+                          ],
+                          "mimeTypesMessage" => "Les Formats PDF, AVI, MPEG, ZIP, RAR,, moins de 10M, s'il vous plaît"
+                        ])
+                        ])
+                        ],
+                    'multiple' => true,
+                    'data_class' => null,
+                    'mapped' => false,
+                  ]) 
                   ->add('classe', EntityType::class, [
                     'class' => Classes::class,
                     'choice_label' => fn(Classes $coh) => $coh->getFiliere()->getName() . '-' . $coh->getName(),
@@ -459,18 +485,123 @@ public function deletecohorte(int $id, Classes $cohorte, ManagerRegistry $coh,  
                     'label' => false,
                   ])
                   ->add('date', DateType::class, [
-                    'placeholder' => [
-                        'year' => 'Année', 'month' => 'Mois', 'day' => 'Jour',
-                    ],
+                  'placeholder' => [
+                    'year' => 'Année', 'month' => 'Mois', 'day' => 'Jour',
+                  ],
                     'label' => false,
                     'format' => 'dd MM yyyy',
-                    'empty_data'  => '',
                   ])
                   ->add('visible', CheckboxType::class, [
                     'label' => 'Voule-vous mettre le cours en visible ?',
-                    'value' => '1',
                     'row_attr' => ['class' => 'form-switch'],
-                    'attr' => [ 'checked' => 'checked'],
+                    'required' => false,
+                  ]) 
+                  ->getForm();
+                
+    $form->handleRequest($request);
+    if($form->isSubmitted() && $form->isValid()){
+      if(!$cour->getId()){
+        $cour;
+      }
+      $files = $form->get('coursFiles')->getData();
+      foreach($files as $file){
+        // On génère un nouveau nom de fichier
+        $fichier = $file->getClientOriginalName();
+        
+        // On copie le fichier dans le dossier uploads
+        $file->move(
+            $this->getParameter('cours_directory'),
+            $fichier
+        );
+      
+        // On crée l'image dans la base de données
+        $cfile = new CoursFiles();
+        $cfile->setName($fichier);
+        $cour->addCoursFile($cfile);
+    }
+      $this->addFlash('success', 'Votre messsage est bien ajouté ou modifié');
+      $manager->persist($cour);
+      $manager->flush();
+  
+      return $this->redirectToRoute('addcours');
+      }
+    return $this->render('users/addcours.html.twig', [
+      'cours' =>  $cours,
+      'filieres' =>  $filieres,
+      'matieres' =>  $matieres,                             
+      'cohortes' =>  $cohortes,
+      'coursfiles' =>  $coursfiles,
+      'formCours' => $form->createView(),
+      'EditMode' =>  $cour->getId() !== null,
+    ]);
+  }
+
+  /**
+  * @Route("/addcours/{id}", name="addcoursEdit")
+  */
+
+  public function editcours(Cours $cour = null,Request $request,ManagerRegistry $cou, EntityManagerInterface $manager, SluggerInterface $slugger): Response
+  {
+    $cours = $cou->getRepository(Cours::class)->findAll();
+    $cohortes = $cou->getRepository(Classes::class)->findAll();
+    $filieres = $cou->getRepository(filieres::class)->findAll();
+    $matieres= $cou->getRepository(Matieres::class)->findAll();
+    $coursfiles= $cou->getRepository(CoursFiles::class)->findAll();
+
+    if(!$cour){
+      $cour = new Cours;
+    } 
+
+    $form = $this->createFormBuilder($cour)
+                  ->add('name', TextType::class, [ 
+                    'label' => false,
+                  ])
+                  ->add('coursFiles', FileType::class, [
+                    'label' => false,
+                    'constraints' => [
+                      new All([
+                        new File([
+                          "maxSize" => "10M",
+                          "mimeTypes" => [
+                              "application/pdf",
+                              "video/x-msvideo",
+                              "video/mpeg",
+                              "application/zip",
+                              "application/x-rar-compressed"
+                          ],
+                          "mimeTypesMessage" => "Les Formats PDF, AVI, MPEG, ZIP, RAR, moins de 10M, s'il vous plaît"
+                        ])
+                        ])
+                        ],
+                    'required'   => false,
+                    'data_class' => null,
+                    'empty_data' => '',
+                    'multiple' => true,
+                    'mapped' => false,
+                  ])
+                  ->add('classe', EntityType::class, [
+                    'class' => Classes::class,
+                    'choice_label' => fn(Classes $coh) => $coh->getFiliere()->getName() . '-' . $coh->getName(),
+                    'choice_value' => 'id',
+                    'label' => false,
+                  ])
+                  ->add('matiere', EntityType::class, [
+                    'class' => Matieres::class,
+                    'choice_label' => 'name',
+                    'choice_value' => 'id',
+                    'label' => false,
+                  ])
+                  ->add('date', DateType::class, [
+                  'placeholder' => [
+                    'year' => 'Année', 'month' => 'Mois', 'day' => 'Jour',
+                  ],
+                    'label' => false,
+                    'format' => 'dd MM yyyy',
+                  ])
+                  ->add('visible', CheckboxType::class, [
+                    'label' => 'Voule-vous mettre le cours en visible ?',
+                    'row_attr' => ['class' => 'form-switch'],
+                    'required' => false,
                   ]) 
                   ->getForm();
                  
@@ -479,39 +610,42 @@ public function deletecohorte(int $id, Classes $cohorte, ManagerRegistry $coh,  
       if(!$cour->getId()){
         $cour;
       }
-      $brochureFile = $form->get('pdf')->getData();
-
-      if ($brochureFile) {
-          $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
-          $safeFilename = $slugger->slug($originalFilename);
-          $newFilename = $safeFilename.'-'.uniqid().'.'.$brochureFile->guessExtension();
-
-          try {
-              $brochureFile->move(
-                  $this->getParameter('brochures_directory'),
-                  $newFilename
-              );
-          } catch (Cours $e) {
-            
-          }
-
-          $cour->setPdf($newFilename);
-      }
+      $files = $form->get('coursFiles')->getData();
+      if (is_array($files) || is_object($files))
+    {
+      foreach($files as $file){
+        // On génère un nouveau nom de fichier
+        $fichier = $file->getClientOriginalName();
+        
+        // On copie le fichier dans le dossier uploads
+        $file->move(
+            $this->getParameter('cours_directory'),
+            $fichier
+        );
+      
+        // On crée l'image dans la base de données
+        $cfile = new CoursFiles();
+        $cfile->setName($fichier);
+        $cour->addCoursFile($cfile);
+    }
+  }
       $this->addFlash('success', 'Votre messsage est bien ajouté ou modifié');
       $manager->persist($cour);
       $manager->flush();
-
+  
       return $this->redirectToRoute('addcours');
-    }
+      }
     return $this->render('users/addcours.html.twig', [
       'cours' =>  $cours,
       'filieres' =>  $filieres,
-      'matieres' =>  $matieres,
-      'cohortes' => $cohortes,
+      'matieres' =>  $matieres,                             
+      'cohortes' =>  $cohortes,
+      'coursfiles' =>  $coursfiles,
       'formCours' => $form->createView(),
-      'EditMode' =>  $cour->getId() !== null
+      'EditMode' =>  $cour->getId() !== null,
     ]);
   }
+
   /**
   * @Route("/addcours/delete/{id}", name="addcoursdelete")
   * @return Response
@@ -520,11 +654,35 @@ public function deletecohorte(int $id, Classes $cohorte, ManagerRegistry $coh,  
   public function deletecours(int $id, Cours $cour, ManagerRegistry $cou,  EntityManagerInterface $manager): Response
   {
     $cour = $cou->getRepository(Cours::class)->find($id);
-    $this->addFlash('success', 'Votre messsage est supprimé !');
+    $this->addFlash('success', 'Votre cours est supprimé !');
     $manager->remove($cour);
     $manager->flush();
     return $this->redirectToRoute('addcours');
   }
+
+ /**
+ * @Route("/addcours/delete/cours/{id}", name="cours_delete_fichier", methods={"DELETE"})
+ */
+public function deleteFile(CoursFiles $courfile, Request $request,ManagerRegistry $doctrine):Response{
+  $data = json_decode($request->getContent(), true);
+
+  // On vérifie si le token est valide
+  if($this->isCsrfTokenValid('delete'.$courfile->getId(), $data['token'])){
+      $name = $courfile->getName();
+      // On supprime le fichier
+      unlink($this->getParameter('cours_directory').'/'.$name);
+
+      // On supprime l'entrée de la base
+      $manager = $doctrine->getManager();
+      $manager->remove($courfile);
+      $manager->flush();
+
+      // On répond en json
+      return new JsonResponse(['success'], 1);
+  }else{
+      return new JsonResponse(['error' => 'Token Invalide'], 400);
+  }
+}
 
    /**
    * @Route("/addcourspublic/", name="addcourspublic")

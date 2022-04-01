@@ -11,7 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=SectionsRepository::class)
- * @UniqueEntity("compagnie", message="cette section est déjà présent dans cette compagnie")
  */
 class Sections
 {
