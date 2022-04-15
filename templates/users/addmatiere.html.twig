@@ -1,43 +1,46 @@
 {% extends "base.html.twig" %}
 {% form_theme formMatiere 'bootstrap_5_layout.html.twig' %}
 {% block main %}
-	<section class="d-flex justify-content-between">
+{% if app.user %}
+	<section class="d-flex flex-lg-row flex-column justify-content-lg-between">
 		{{ form_start(formMatiere) }}
-		<h2 class="text-start my-5">
-			{% if EditMode %}
-				Modifier une Matière
-			{% else %}
-				Ajouter une Matière
-			{% endif %}
-		</h2>
-		{% for message in app.flashes('success') %}
-			<div class="alert alert-success">
-				{{ message }}
-			</div>
-		{% endfor %}
-		<label for="exampleFormControlInput1" class="form-label">Nom de la Matière:</label>
-		{{ form_row(formMatiere.name)}}
-		<div class="d-flex justify-content-around mt-4">
-			<button type="submit" class="btn btn-primary btn-outline-success text-white">
+		<div class="p-5">
+			<h2 class="text-center">
 				{% if EditMode %}
-					Modifier
+					Modifier une Matière
 				{% else %}
-					Enregistrer
+					Ajouter une Matière
 				{% endif %}
-			</button>
-			<a href="/addmatiere/" class="btn btn-primary btn-outline-danger text-white">Annuler</a>
+			</h2>
+			{% for message in app.flashes('success') %}
+				<div class="alert alert-success">
+					{{ message }}
+				</div>
+			{% endfor %}
+			<label for="exampleFormControlInput1" class="form-label">Nom de la Matière:</label>
+			{{ form_row(formMatiere.name)}}
+			<div class="d-flex justify-content-around mt-4">
+				<button type="submit" class="btn btn-primary btn-outline-success text-white">
+					{% if EditMode %}
+						Modifier
+					{% else %}
+						Enregistrer
+					{% endif %}
+				</button>
+				<a href="/addmatiere/" class="btn btn-primary btn-outline-danger text-white">Annuler</a>
+			</div>
 		</div>
 		{{ form_end(formMatiere) }}
-		<div class="w-75 my-auto">
-			<table class="table border border-3 table-bordered ">
+		<div class="p-5 w-75">
+			<table id="datatable" class="table table-bordered border border-3  w-100">
 				<thead>
 					<tr class="bg-danger">
 						<th scope="col">Matière</th>
 						<th scope="col">Modifier/Supprimé</th>
 					</tr>
 				</thead>
-				{% for matiere in matieres %}
-					<tbody class="bg-dark text-white">
+				<tbody class="bg-dark text-white">
+					{% for matiere in matieres %}
 						<tr>
 							<td>{{ matiere.name }}</td>
 							<td>
@@ -46,9 +49,15 @@
 								<a class="text-decoration-none text-hover-danger" href="/addmatiere/delete/{{ matiere.id }}" onclick="return confirm('Supprimer ?')">Supprimer</a>
 							</td>
 						</tr>
-					</tbody>
-				{% endfor %}
+					{% endfor %}
+				</tbody>
 			</table>
 		</div>
 	</section>
+	{% else %}
+		<div class="my-6">
+			<h1>Vous devez vous connecté</h1>
+			<a class="btn btn-primary" href="{{ path('app_logout') }}">Retour sur la page de connexion</a>
+		</div>
+	{% endif %}
 {% endblock %}

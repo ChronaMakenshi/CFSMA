@@ -10,8 +10,10 @@ use App\Entity\Matieres;
 use App\Entity\Sections;
 use App\Entity\Compagnies;
 use App\Entity\CoursFiles;
+use App\Entity\Courpublics;
+use App\Entity\CoursFilesp;
 use App\Entity\Matierepublics;
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use App\Entity\Users;
 use App\Repository\SectionsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -22,7 +24,6 @@ use Symfony\Component\Validator\Constraints\All;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -32,16 +33,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class CfsmaController extends AbstractController
 {
      /**
-     * @Route("/", name="matiere")
+     * @Route("/matiere/", name="matiere")
      */
     
     public function pagematiere(ManagerRegistry $mat)
     {
+      $users = $mat->getRepository(Users::class)->findAll();
+      $filieres = $mat->getRepository(filieres::class)->findAll();
+      $sections = $mat->getRepository(Sections::class)->findAll();
       $matieres= $mat->getRepository(Matieres::class)->findAll();
+      $cohortes = $mat->getRepository(Classes::class)->findAll();
 
     return $this->render('users/pagedesmatiere.html.twig', [
     'controller_name' => 'CfsmaController',
-    'matieres' => $matieres
+    'users' => $users,
+    'matieres' => $matieres,
+    'sections' =>  $sections,
+    'filieres' =>  $filieres,
+    'cohortes' =>  $cohortes,
     ]);
   }
 
@@ -56,45 +65,6 @@ class CfsmaController extends AbstractController
     return $this->render('users/pagedesmatierepublic.html.twig', [
     'matierepublics' => $matierepublics
     ]);
-  }
-
-
-    /**
-     * @Route("/connexion", name="connexion")
-     */
-
-    public function connexion()
-    {
-      return $this->render('connexion.html.twig');
-
-    }
-
-  /**
-   * @Route("/addUsers/", name="addUsers")
-   */
-
-    public function User()
-    {
-      return $this->render('users/addUser.html.twig');
-
-    }
-
-   /**
-   * @Route("/addformateur/", name="addformateur")
-   */
-
-  public function formateur()
-  {
-    return $this->render('users/addformateur.html.twig');
-  }
-
-   /**
-   * @Route("/addstagiaire/", name="addstagiaire")
-   */
-
-  public function stagiaire()
-  {
-    return $this->render('users/addstagiaire.html.twig');
   }
 
   /**
@@ -435,7 +405,7 @@ public function deletecohorte(int $id, Classes $cohorte, ManagerRegistry $coh,  
    * @Route("/addcours/", name="addcours")
    */
 
-  public function ajoutecours(Cours $cour = null,Request $request,ManagerRegistry $cou, EntityManagerInterface $manager, SluggerInterface $slugger): Response
+  public function ajoutecours(Cours $cour = null,Request $request,ManagerRegistry $cou, EntityManagerInterface $manager): Response
   {
     $cours = $cou->getRepository(Cours::class)->findAll();
     $cohortes = $cou->getRepository(Classes::class)->findAll();
@@ -540,7 +510,7 @@ public function deletecohorte(int $id, Classes $cohorte, ManagerRegistry $coh,  
   * @Route("/addcours/{id}", name="addcoursEdit")
   */
 
-  public function editcours(Cours $cour = null,Request $request,ManagerRegistry $cou, EntityManagerInterface $manager, SluggerInterface $slugger): Response
+  public function editcours(Cours $cour = null,Request $request,ManagerRegistry $cou, EntityManagerInterface $manager): Response
   {
     $cours = $cou->getRepository(Cours::class)->findAll();
     $cohortes = $cou->getRepository(Classes::class)->findAll();
@@ -662,6 +632,7 @@ public function deletecohorte(int $id, Classes $cohorte, ManagerRegistry $coh,  
 
  /**
  * @Route("/addcours/delete/cours/{id}", name="cours_delete_fichier", methods={"DELETE"})
+ * @return Response
  */
 public function deleteFile(CoursFiles $courfile, Request $request,ManagerRegistry $doctrine):Response{
   $data = json_decode($request->getContent(), true);
@@ -688,19 +659,274 @@ public function deleteFile(CoursFiles $courfile, Request $request,ManagerRegistr
    * @Route("/addcourspublic/", name="addcourspublic")
    */
 
-  public function courspublic()
+  public function ajouteourspublic(Courpublics $courp = null,Request $request,ManagerRegistry $coup, EntityManagerInterface $manager): Response
   {
-    return $this->render('users/addcourspublics.html.twig');
+    $courpublics = $coup->getRepository(Courpublics::class)->findAll();
+    $matierepublics = $coup->getRepository(Matierepublics::class)->findAll();
+    $coursfilesps= $coup->getRepository(CoursFilesp::class)->findAll();
+
+    if(!$courp){
+      $courp = new Courpublics;
+    } 
+
+    $form = $this->createFormBuilder($courp)
+                  ->add('name', TextType::class, [ 
+                    'label' => false,
+                  ])
+                  ->add('coursFilesp', FileType::class, [
+                    'label' => false,
+                    'constraints' => [
+                      new All([
+                        new File([
+                          "maxSize" => "10M",
+                          "mimeTypes" => [
+                              "application/pdf",
+                              "video/x-msvideo",
+                              "video/mpeg",
+                              "application/zip",
+                              "application/x-rar-compressed"
+                          ],
+                          "mimeTypesMessage" => "Les Formats PDF, AVI, MPEG, ZIP, RAR,, moins de 10M, s'il vous plaît"
+                        ])
+                        ])
+                        ],
+                    'multiple' => true,
+                    'data_class' => null,
+                    'mapped' => false,
+                  ]) 
+                  ->add('matierepublic', EntityType::class, [
+                    'class' => Matierepublics::class,
+                    'choice_label' => 'name',
+                    'choice_value' => 'id',
+                    'label' => false,
+                  ])
+                  ->add('date', DateType::class, [
+                  'placeholder' => [
+                    'year' => 'Année', 'month' => 'Mois', 'day' => 'Jour',
+                  ],
+                    'label' => false,
+                    'format' => 'dd MM yyyy',
+                  ])
+                  ->add('visible', CheckboxType::class, [
+                    'label' => 'Voule-vous mettre le cours en visible ?',
+                    'row_attr' => ['class' => 'form-switch'],
+                    'required' => false,
+                  ]) 
+                  ->getForm();
+                
+    $form->handleRequest($request);
+    if($form->isSubmitted() && $form->isValid()){
+      if(!$courp->getId()){
+        $courp;
+      }
+      $files = $form->get('coursFilesp')->getData();
+      foreach($files as $file){
+        // On génère un nouveau nom de fichier
+        $fichier = $file->getClientOriginalName();
+        
+        // On copie le fichier dans le dossier uploads
+        $file->move(
+            $this->getParameter('cours_directory'),
+            $fichier
+        );
+      
+        // On crée l'image dans la base de données
+        $cfile = new CoursFilesp();
+        $cfile->setName($fichier);
+        $courp->addCoursFilesp($cfile);
+    }
+      $this->addFlash('success', 'Votre messsage est bien ajouté ou modifié');
+      $manager->persist($courp);
+      $manager->flush();
+  
+      return $this->redirectToRoute('addcourspublic');
+      }
+      return $this->render('users/addcourspublics.html.twig', [
+      'courpublics' =>  $courpublics,
+      'matierepublics' =>  $matierepublics,                             
+      'coursfilesps' =>  $coursfilesps,
+      'formCourspublic' => $form->createView(),
+      'EditMode' =>  $courp->getId() !== null,
+    ]);
   }
 
-   /**
-   * @Route("/pagedescoursp/", name="pagedescoursp")
+  /**
+  * @Route("/addcourspublic/{id}", name="addcourspublicEdit")
+  */
+
+  public function editcourspublic(Courpublics $courp = null,Request $request,ManagerRegistry $coup, EntityManagerInterface $manager): Response
+  {
+    $courpublics = $coup->getRepository(Courpublics::class)->findAll();
+    $matierepublics = $coup->getRepository(Matierepublics::class)->findAll();
+    $coursfilesps = $coup->getRepository(CoursFilesp::class)->findAll();
+
+    if(!$courp){
+      $courp = new Courpublics;
+
+    } 
+
+    $form = $this->createFormBuilder($courp)
+                  ->add('name', TextType::class, [ 
+                    'label' => false,
+                  ])
+                  ->add('coursFilesp', FileType::class, [
+                    'label' => false,
+                    'constraints' => [
+                      new All([
+                        new File([
+                          "maxSize" => "10M",
+                          "mimeTypes" => [
+                              "application/pdf",
+                              "video/x-msvideo",
+                              "video/mpeg",
+                              "application/zip",
+                              "application/x-rar-compressed"
+                          ],
+                          "mimeTypesMessage" => "Les Formats PDF, AVI, MPEG, ZIP, RAR, moins de 10M, s'il vous plaît"
+                        ])
+                        ])
+                        ],
+                    'required'   => false,
+                    'data_class' => null,
+                    'empty_data' => '',
+                    'multiple' => true,
+                    'mapped' => false,
+                  ])
+                  ->add('matierepublic', EntityType::class, [
+                    'class' => Matierepublics::class,
+                    'choice_label' => 'name',
+                    'choice_value' => 'id',
+                    'label' => false,
+                  ])
+                  ->add('date', DateType::class, [
+                  'placeholder' => [
+                    'year' => 'Année', 'month' => 'Mois', 'day' => 'Jour',
+                  ],
+                    'label' => false,
+                    'format' => 'dd MM yyyy',
+                  ])
+                  ->add('visible', CheckboxType::class, [
+                    'label' => 'Voule-vous mettre le cours en visible ?',
+                    'row_attr' => ['class' => 'form-switch'],
+                    'required' => false,
+                  ]) 
+                  ->getForm();
+                 
+    $form->handleRequest($request);
+    if($form->isSubmitted() && $form->isValid()){
+      if(!$courp->getId()){
+        $courp;
+      }
+      $files = $form->get('coursFilesp')->getData();
+      if (is_array($files) || is_object($files))
+    {
+      foreach($files as $file){
+        // On génère un nouveau nom de fichier
+        $fichier = $file->getClientOriginalName();
+        
+        // On copie le fichier dans le dossier uploads
+        $file->move(
+            $this->getParameter('cours_directory'),
+            $fichier
+        );
+      
+        // On crée l'image dans la base de données
+        $cfile = new CoursFilesp();
+        $cfile->setName($fichier);
+        $courp->addCoursFilesp($cfile);
+    }
+  }
+      $this->addFlash('success', 'Votre messsage est bien ajouté ou modifié');
+      $manager->persist($courp);
+      $manager->flush();
+  
+      return $this->redirectToRoute('addcourspublic');
+      }
+      return $this->render('users/addcourspublics.html.twig', [
+      'courpublics' =>  $courpublics,
+      'matierepublics' =>  $matierepublics,                             
+      'coursfilesps' =>  $coursfilesps,
+      'formCourspublic' => $form->createView(),
+      'EditMode' =>  $courp->getId() !== null,
+    ]);
+  }
+
+  /**
+  * @Route("/addcourspublic/delete/{id}", name="addcourspublicdelete")
+  * @return Response
+  */
+
+  public function deletecourspublic(int $id, Courpublics $courp, ManagerRegistry $coup,  EntityManagerInterface $manager): Response
+  {
+    $courp = $coup->getRepository(Courpublics::class)->find($id);
+    $this->addFlash('success', 'Votre cours est supprimé !');
+    $manager->remove($courp);
+    $manager->flush();
+    return $this->redirectToRoute('addcourspublic');
+  }
+
+  /**
+ * @Route("/addcourspublic/delete/cours/{id}", name="courspublic_delete_fichier", methods={"DELETEP"})
+ * @return Response
+ */
+
+public function deleteFilepublic(CoursFilesp $courfilep, Request $request,ManagerRegistry $doctrine):Response{
+  $data = json_decode($request->getContent(), true);
+
+  // On vérifie si le token est valide
+  if($this->isCsrfTokenValid('deletep'.$courfilep->getId(), $data['_token'])){
+      $name = $courfilep->getName();
+      // On supprime le fichier
+      unlink($this->getParameter('cours_directory').'/'.$name);
+
+      // On supprime l'entrée de la base
+      $manager = $doctrine->getManager();
+      $manager->remove($courfilep);
+      $manager->flush();
+
+      // On répond en json
+      return new JsonResponse(['success'], 1);
+  }else{
+      return new JsonResponse(['error' => 'Token Invalide'], 400);
+  }
+}
+
+  /**
+   * @Route("/pagedescours/cours/{id}", name="pagedescours")
+   * @param Matieres $matieres
+   * @return Response
    */
 
-  public function pagedescoursp()
+  public function pagedescours(Matieres $matieres, ManagerRegistry  $doctrine):Response
   {
-    return $this->render('users/pagedescourspublic.html.twig');
+    $filieres = $doctrine->getRepository(Filieres::class)->findAll();
+    $cohortes = $doctrine->getRepository(Classes::class)->findAll();
+    $sections = $doctrine->getRepository(Sections::class)->findAll();
+    $cours = $doctrine->getRepository(Cours::class)->findAll();
+
+    return $this->render('users/pagesdecourspriver.html.twig', [
+      'matiere' =>  $matieres,
+      'cours' =>  $cours,
+      'filieres' =>  $filieres,
+      'cohortes' =>  $cohortes,
+      'sections' =>  $sections,
+    ]);  
   }
 
 
+ /**
+   * @Route("/pagedescoursp/cours/{id}", name="pagedescoursp")
+   * @param Matierepublics $matierepublics
+   * @return Response
+   */
+
+  public function pagedescoursp(Matierepublics $matierepublics,ManagerRegistry  $doctrine):Response
+  {
+    $courpublics = $doctrine->getRepository(Courpublics::class)->findAll();
+
+    return $this->render('users/pagedescourspublic.html.twig', [
+    'matierepublic' =>  $matierepublics,
+    'courpublics' =>  $courpublics,
+  ]);   
+  }
 }

@@ -1,37 +1,40 @@
 {% extends "base.html.twig" %}
 {% form_theme formCohorte 'bootstrap_5_layout.html.twig' %}
 {% block main %}
-	<section class="d-flex justify-content-between">
+{% if app.user %}
+	<section class="d-flex flex-lg-row flex-column justify-content-lg-between">
 		{{ form_start(formCohorte) }}
-		<h2 class="text-start my-5">
-			{% if EditMode %}
-				Modifier une Cohorte
-			{% else %}
-				Ajouter une Cohorte
-			{% endif %}
-		</h2>
-		{% for message in app.flashes('success') %}
-			<div class="alert alert-success">
-				{{ message }}
-			</div>
-		{% endfor %}
-		<label for="exampleFormControlInput1" class="form-label">Nom de la Cohorte:</label>
-		{{ form_row(formCohorte.name)}}
-		<label for="exampleFormControlInput1" class="form-label">Nom de la Section/Cohorte :</label>
-		{{ form_row(formCohorte.filiere) }}
-		<div class="d-flex justify-content-around mt-4">
-			<button type="submit" class="btn btn-primary btn-outline-success text-white">
+		<div class="p-5">
+			<h2 class="text-center">
 				{% if EditMode %}
-					Modifier
+					Modifier une Cohorte
 				{% else %}
-					Enregistrer
+					Ajouter une Cohorte
 				{% endif %}
-			</button>
-			<a href="/addcohorte/" class="btn btn-primary btn-outline-danger text-white">Annuler</a>
+			</h2>
+			{% for message in app.flashes('success') %}
+				<div class="alert alert-success">
+					{{ message }}
+				</div>
+			{% endfor %}
+			<label for="exampleFormControlInput1" class="form-label">Nom de la Cohorte:</label>
+			{{ form_row(formCohorte.name)}}
+			<label for="exampleFormControlInput1" class="form-label">Nom de la Section/Cohorte :</label>
+			{{ form_row(formCohorte.filiere) }}
+			<div class="d-flex justify-content-around mt-4">
+				<button type="submit" class="btn btn-primary btn-outline-success text-white">
+					{% if EditMode %}
+						Modifier
+					{% else %}
+						Enregistrer
+					{% endif %}
+				</button>
+				<a href="/addcohorte/" class="btn btn-primary btn-outline-danger text-white">Annuler</a>
+			</div>
+			{{ form_end(formCohorte) }}
 		</div>
-		{{ form_end(formCohorte) }}
-		<div class="w-75 my-auto">
-			<table class="table border border-3 table-bordered ">
+		<div class="p-5 w-75">
+			<table id="datatable" class="table table-bordered border border-3  w-100">
 				<thead>
 					<tr class="bg-danger">
 						<th scope="col">Section</th>
@@ -40,12 +43,12 @@
 						<th scope="col">Action</th>
 					</tr>
 				</thead>
-				{% for section in sections %}
-					{% for filiere in filieres %}
-						{% if  filiere.section.id == section.id %}
-							{% for cohorte in cohortes %}
-								{% if cohorte.filiere.id == filiere.id %}
-									<tbody class="bg-dark text-white">
+				<tbody class="bg-dark text-white">
+					{% for section in sections %}
+						{% for filiere in filieres %}
+							{% if  filiere.section.id == section.id %}
+								{% for cohorte in cohortes %}
+									{% if cohorte.filiere.id == filiere.id %}
 										<tr>
 											<td>{{ section.name }}</td>
 											<td>{{ filiere.name }}</td>
@@ -56,13 +59,19 @@
 												<a class="text-decoration-none text-hover-danger" href="/addcohorte/delete/{{ cohorte.id }}" onclick="return confirm('Supprimer ?')">Supprimer</a>
 											</td>
 										</tr>
-									</tbody>
-								{% endif %}
-							{% endfor %}
-						{% endif %}
+									{% endif %}
+								{% endfor %}
+							{% endif %}
+						{% endfor %}
 					{% endfor %}
-				{% endfor %}
+				</tbody>
 			</table>
 		</div>
 	</section>
+	{% else %}
+		<div class="my-6">
+			<h1>Vous devez vous connecté</h1>
+			<a class="btn btn-primary" href="{{ path('app_logout') }}">Retour sur la page de connexion</a>
+		</div>
+	{% endif %}
 {% endblock %}

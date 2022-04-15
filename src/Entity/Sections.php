@@ -39,7 +39,7 @@ class Sections
     private $filieres;
 
     /**
-     * @ORM\OneToMany(targetEntity=Users::class, mappedBy="section", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Users::class, mappedBy="section")
      */
     private $users;
 
@@ -109,7 +109,7 @@ class Sections
     }
 
     /**
-     * @return Collection|Users[]
+     * @return Collection<int, Users>
      */
     public function getUsers(): Collection
     {
@@ -137,4 +137,6 @@ class Sections
 
         return $this;
     }
+
+ 
 }

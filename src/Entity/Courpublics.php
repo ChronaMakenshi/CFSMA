@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CourpublicsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,25 +25,29 @@ class Courpublics
     private $name;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="date")
      */
     private $date;
 
     /**
      * @ORM\ManyToOne(targetEntity=Matierepublics::class, inversedBy="courpublics")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $matierepublic;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $PDF;
-
-    /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="boolean")
      */
     private $visible;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CoursFilesp::class, mappedBy="courfilesp", orphanRemoval=true, cascade={"persist"})
+     */
+    private $coursFilesps;
+
+    public function __construct()
+    {
+        $this->coursFilesps = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -84,26 +90,44 @@ class Courpublics
         return $this;
     }
 
-    public function getPDF(): ?string
-    {
-        return $this->PDF;
-    }
-
-    public function setPDF(string $PDF): self
-    {
-        $this->PDF = $PDF;
-
-        return $this;
-    }
-
-    public function getVisible(): ?int
+    public function getVisible(): ?bool
     {
         return $this->visible;
     }
 
-    public function setVisible(int $visible): self
+    public function setVisible(bool $visible): self
     {
         $this->visible = $visible;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CoursFilesp[]
+     */
+    public function getCoursFilesps(): Collection
+    {
+        return $this->coursFilesps;
+    }
+
+    public function addCoursFilesp(CoursFilesp $coursFilesp): self
+    {
+        if (!$this->coursFilesps->contains($coursFilesp)) {
+            $this->coursFilesps[] = $coursFilesp;
+            $coursFilesp->setCourfilesp($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCoursFilesp(CoursFilesp $coursFilesp): self
+    {
+        if ($this->coursFilesps->removeElement($coursFilesp)) {
+            // set the owning side to null (unless already changed)
+            if ($coursFilesp->getCourfilesp() === $this) {
+                $coursFilesp->setCourfilesp(null);
+            }
+        }
 
         return $this;
     }

@@ -1,37 +1,40 @@
 {% extends "base.html.twig" %}
 {% form_theme formSection 'bootstrap_5_layout.html.twig' %}
 {% block main %}
-	<section class="d-flex justify-content-between">
+{% if app.user %}
+	<section class="d-flex flex-lg-row flex-column justify-content-lg-between">
 		{{ form_start(formSection) }}
-		<h2 class="text-start my-5">
-			{% if EditMode %}
-				Modifier une Section
-			{% else %}
-				Ajouter une Section
-			{% endif %}
-		</h2>
-		{% for message in app.flashes('success') %}
-			<div class="alert alert-success">
-				{{ message }}
-			</div>
-		{% endfor %}
-		<label for="exampleFormControlInput1" class="form-label">Nom de la compagnie :</label>
-		{{ form_row(formSection.compagnie)}}
-		<label for="exampleFormControlInput1" class="form-label">Nom de la section :</label>
-		{{ form_row(formSection.name)}}
-		<div class="d-flex justify-content-around mt-4">
-			<button type="submit" class="btn btn-primary btn-outline-success text-white">
+		<div class="p-5">
+			<h2 class="text-center">
 				{% if EditMode %}
-					Modifier
+					Modifier une Section
 				{% else %}
-					Enregistrer
+					Ajouter une Section
 				{% endif %}
-			</button>
-			<a href="/addsection/" class="btn btn-primary btn-outline-danger text-white">Annuler</a>
+			</h2>
+			{% for message in app.flashes('success') %}
+				<div class="alert alert-success">
+					{{ message }}
+				</div>
+			{% endfor %}
+			<label for="exampleFormControlInput1" class="form-label">Nom de la compagnie :</label>
+			{{ form_row(formSection.compagnie)}}
+			<label for="exampleFormControlInput1" class="form-label">Nom de la section :</label>
+			{{ form_row(formSection.name)}}
+			<div class="d-flex justify-content-around mt-4">
+				<button type="submit" class="btn btn-primary btn-outline-success text-white">
+					{% if EditMode %}
+						Modifier
+					{% else %}
+						Enregistrer
+					{% endif %}
+				</button>
+				<a href="/addsection/" class="btn btn-primary btn-outline-danger text-white">Annuler</a>
+			</div>
 		</div>
 		{{ form_end(formSection) }}
-		<div class="w-75 my-auto">
-			<table class="table border border-3 table-bordered ">
+		<div class="p-5 w-75">
+			<table id="datatable" class="table table-bordered border border-3  w-100">
 				<thead>
 					<tr class="bg-danger">
 						<th scope="col">Compagnie</th>
@@ -39,11 +42,10 @@
 						<th scope="col">Modifier / Supprimer</th>
 					</tr>
 				</thead>
-
-				{% for compagnie in compagnies %}
-					{% for section in sections %}
-						{% if  section.compagnie.id == compagnie.id %}
-							<tbody class="bg-dark text-white">
+				<tbody class="bg-dark text-white">
+					{% for compagnie in compagnies %}
+						{% for section in sections %}
+							{% if  section.compagnie.id == compagnie.id %}
 								<tr>
 									<td>{{ compagnie.name }}</td>
 									<td>{{ section.name }}</td>
@@ -53,11 +55,17 @@
 										<a class="text-decoration-none text-hover-danger" href="/addsection/delete/{{ section.id }}" onclick="return confirm('Supprimer ?')">Supprimer</a>
 									</td>
 								</tr>
-							</tbody>
-						{% endif %}
+							{% endif %}
+						{% endfor %}
 					{% endfor %}
-				{% endfor %}
+				</tbody>
 			</table>
 		</div>
 	</section>
+	{% else %}
+		<div class="my-6">
+			<h1>Vous devez vous connecté</h1>
+			<a class="btn btn-primary" href="{{ path('app_logout') }}">Retour sur la page de connexion</a>
+		</div>
+	{% endif %}
 {% endblock %}

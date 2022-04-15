@@ -33,14 +33,14 @@ class Classes
     private $filiere;
 
     /**
-     * @ORM\OneToMany(targetEntity=Users::class, mappedBy="classe", orphanRemoval=true)
-     */
-    private $users;
-
-    /**
      * @ORM\OneToMany(targetEntity=Cours::class, mappedBy="classe")
      */
     private $cours;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Users::class, mappedBy="classe")
+     */
+    private $users;
 
   
 
@@ -79,35 +79,6 @@ class Classes
         return $this;
     }
 
-    /**
-     * @return Collection|Users[]
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    public function addUser(Users $user): self
-    {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->setClasse($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(Users $user): self
-    {
-        if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getClasse() === $this) {
-                $user->setClasse(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection|Cours[]
@@ -133,6 +104,36 @@ class Classes
             // set the owning side to null (unless already changed)
             if ($cour->getClasse() === $this) {
                 $cour->setClasse(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Users>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(Users $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->setClasse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(Users $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getClasse() === $this) {
+                $user->setClasse(null);
             }
         }
 

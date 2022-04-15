@@ -108,7 +108,7 @@ class Filieres
     }
 
     /**
-     * @return Collection|Users[]
+     * @return Collection<int, Users>
      */
     public function getUsers(): Collection
     {
@@ -136,4 +136,6 @@ class Filieres
 
         return $this;
     }
+
+ 
 }

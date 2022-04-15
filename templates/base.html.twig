@@ -25,34 +25,42 @@
 				<div class="collapse navbar-collapse" id="navbarText">
 					<ul class="navbar-nav me-auto">
 						<li class="nav-item dropdown" id="myDropdown">
-							<a class="nav-link dropdown-toggle text-light" data-bs-toggle="dropdown">
-								Administration
-							</a>
+							{% if is_granted('ROLE_EDIT') or is_granted('ROLE_CHEF') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPERADMIN') %}
+								<a class="nav-link dropdown-toggle text-light" data-bs-toggle="dropdown">
+									Administration
+								</a>
+							{% endif %}
 							<ul class="dropdown-menu bg-dark">
-								<li>
-									<a class="dropdown-item text-light" href="{{ path('addUsers') }}">
-										Gestion Utilisateurs
-									</a>
-								</li>
+								{% if is_granted('ROLE_SUPERADMIN') %}
+									<li>
+										<a class="dropdown-item text-light" href="{{ path('admin_app_register') }}">
+											Gestion Utilisateurs
+										</a>
+									</li>
+								{% endif %}
 								<li>
 									<a class="dropdown-item text-light" href="#">
 										Gestion Régiment &raquo;
 									</a>
 									<ul class="submenu dropdown-menu bg-dark">
+										{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPERADMIN') %}
+											<li>
+												<a class="dropdown-item text-light" href="{{ path('addcompagnie') }}">Ajouter Compagnie</a>
+											</li>
+											<li>
+												<a class="dropdown-item text-light" href="{{ path('addsection') }}">Ajouter Section</a>
+											</li>
+										{% endif %}
+										{% if is_granted('ROLE_CHEF') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPERADMIN') %}
+											<li>
+												<a class="dropdown-item text-light" href="{{ path('addfiliere') }}">Ajouter Filière</a>
+											</li>
+											<li>
+												<a class="dropdown-item text-light" href="{{ path('admin_app_formateur') }}">Ajouter Formateur</a>
+											</li>
+										{% endif %}
 										<li>
-											<a class="dropdown-item text-light" href="{{ path('addcompagnie') }}">Ajouter Compagnie</a>
-										</li>
-										<li>
-											<a class="dropdown-item text-light" href="{{ path('addsection') }}">Ajouter Section</a>
-										</li>
-										<li>
-											<a class="dropdown-item text-light" href="{{ path('addfiliere') }}">Ajouter Filière</a>
-										</li>
-										<li>
-											<a class="dropdown-item text-light" href="{{ path('addformateur') }}">Ajouter Formateur</a>
-										</li>
-										<li>
-											<a class="dropdown-item text-light" href="{{ path('addstagiaire') }}">Ajouter Stagiaire</a>
+											<a class="dropdown-item text-light" href="{{ path('admin_app_stagiaires') }}">Ajouter Stagiaire</a>
 										</li>
 										<li>
 											<a class="dropdown-item text-light" href="{{ path('addcohorte') }}">Ajouter Cohorte</a>
@@ -73,15 +81,17 @@
 								</li>
 							</ul>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link text-light" href="{{ path('public') }}">Public</a>
-						</li>
 					</ul>
-					<span class="navbar-text">
-						<a class="nav-link text-light" href="{{ path('connexion') }}">Déconnexion</a>
-					</span>
 				</div>
-			</div>
+				{% if app.user %}
+					<li class="nav-item">
+						<a class="nav-link text-light" href="{{ path('public') }}">Public</a>
+					</li>
+				</div>
+				<span class="navbar-text">
+					<a class="nav-link text-light" href="{{ path('app_logout') }}">Déconnexion</a>
+				</span>
+			{% endif %}
 		</nav>
 		<main class="mx-5 my-4"> {% block main %}{% endblock %}
 			</main>
@@ -111,9 +121,9 @@
 				</div>
 				<!-- Copyright -->
 			</footer>
+			{% block javascripts %}
+				{{ encore_entry_script_tags('app') }}<script src="{{ asset('js/fichier.js') }}"></script>
+				<script src="{{ asset('js/fichier1.js') }}"></script>
+			{% endblock %}
 		</body>
-		{% block javascripts %}
-			{{ encore_entry_script_tags('app') }}
-			<script src="{{ asset('js/fichier.js') }}"></script>
-		{% endblock %}
 	</html>
