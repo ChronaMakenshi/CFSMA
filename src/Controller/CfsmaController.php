@@ -416,6 +416,7 @@ public function deletecohorte(int $id, Classes $cohorte, ManagerRegistry $coh,  
     if(!$cour){
       $cour = new Cours;
     } 
+    $cour->setDate(new \DateTime('now'));
 
     $form = $this->createFormBuilder($cour)
                   ->add('name', TextType::class, [ 
@@ -460,6 +461,7 @@ public function deletecohorte(int $id, Classes $cohorte, ManagerRegistry $coh,  
                   ],
                     'label' => false,
                     'format' => 'dd MM yyyy',
+                    'years' => range(2022,2052)
                   ])
                   ->add('visible', CheckboxType::class, [
                     'label' => 'Voule-vous mettre le cours en visible ?',
@@ -668,7 +670,7 @@ public function deleteFilepriverc(CoursFiles $courfile, Request $request,Manager
     if(!$courp){
       $courp = new Courpublics;
     } 
-
+    $courp->setDate(new \DateTime('now'));
     $form = $this->createFormBuilder($courp)
                   ->add('name', TextType::class, [ 
                     'label' => false,
@@ -928,5 +930,15 @@ public function deleteFilepublic(CoursFilesp $courfilep, Request $request,Manage
     'matierepublic' =>  $matierepublics,
     'courpublics' =>  $courpublics,
   ]);   
+  }
+
+
+ /**
+   * @Route("/About/", name="About")
+   */
+
+  public function about()
+  {
+    return $this->render('about.html.twig');
   }
 }
