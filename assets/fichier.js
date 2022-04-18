@@ -1,6 +1,6 @@
 window.onload = () => {
     // On boucle sur links
-let links =  document.querySelectorAll("[data-deletep]")
+let links =  document.querySelectorAll("[data-delete]")
 for (let link of links){
     link.addEventListener("click", function(e){
         // On empêche la navigation
@@ -10,7 +10,7 @@ for (let link of links){
         if(confirm("Voulez-vous supprimer un cours ?")){
             // On envoie une requête Ajax vers le href du lien avec la méthode DELETE
             fetch(this.getAttribute("href"), {
-                method: "DELETEP",
+                method: "DELETE",
                 headers: {
                     "X-Requested-With": "XMLHttpRequest",
                     "Content-Type": "application/json"

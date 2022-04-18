@@ -13,20 +13,22 @@
 				<tbody class="bg-dark text-white">
 					{% for courpublic in courpublics %}
 						{% if courpublic.matierepublic.id == matierepublic.id %}
-							<tr>
-								<td>{{ matierepublic.name }}</td>
-								<td>
-									<h5 class="text-decoration-underline">{{ courpublic.name }}</h5>
-									{% for coursfilesp in courpublic.coursfilesps %}
-										<a class="text-decoration-none" href="/uploads/cours/{{ coursfilesp.name }}">{{ coursfilesp.name }}</a><br>
-										{% if app.request.attributes.get('_route') == 'addcourspublicEdit' %}
-											<a class="text-decoration-none text-hover-danger" href={{ path('courspublic_delete_fichier', {id: coursfilesp.id} )}} data-deletep data-token={{ csrf_token('deletep' ~ coursfilesp.id )}}>Supprimer</a>
-											<br>
-										{% endif %}
-									{% endfor %}
-								</td>
-								<td>{{ courpublic.date|date("d/m/Y") }}</td>
-							</tr>
+							{% if courpublic.visible == 1 %}
+								<tr>
+									<td>{{ matierepublic.name }}</td>
+									<td>
+										<h5 class="text-decoration-underline">{{ courpublic.name }}</h5>
+										{% for coursfilesp in courpublic.coursfilesps %}
+											<a class="text-decoration-none" href="/uploads/cours/{{ coursfilesp.name }}">{{ coursfilesp.name }}</a><br>
+											{% if app.request.attributes.get('_route') == 'addcourspublicEdit' %}
+												<a class="text-decoration-none text-hover-danger" href={{ path('courspublic_delete_fichier', {id: coursfilesp.id} )}} data-deletep data-token={{ csrf_token('deletep' ~ coursfilesp.id )}}>Supprimer</a>
+												<br>
+											{% endif %}
+										{% endfor %}
+									</td>
+									<td>{{ courpublic.date|date("d/m/Y") }}</td>
+								</tr>
+							{% endif %}
 						{% endif %}
 					{% endfor %}
 				</tbody>

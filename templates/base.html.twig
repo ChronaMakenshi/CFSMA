@@ -17,8 +17,8 @@
 	<body>
 		<nav class="navbar navbar-expand-lg navbar-light bg-dark">
 			<div class="container-fluid">
-				<a class="w-5" href="{{ path('index') }}"><img class="w-50 rounded-circle me-2" src="{{ asset('build/images/image0.png') }}" alt=""></a>
-				<a class="navbar-brand text-white" href="{{ path('index') }}">Projet VESUNNA</a>
+				<a class="w-5" href="{{ path('matiere') }}"><img class="w-50 rounded-circle me-2" src="{{ asset('build/images/image0.png') }}" alt=""></a>
+				<a class="navbar-brand text-white" href="{{ path('matiere') }}">Projet VESUNNA</a>
 				<button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
@@ -121,9 +121,8 @@
 				</div>
 				<!-- Copyright -->
 			</footer>
-			{% block javascripts %}
-				{{ encore_entry_script_tags('app') }}<script src="{{ asset('js/fichier.js') }}"></script>
-				<script src="{{ asset('js/fichier1.js') }}"></script>
-			{% endblock %}
 		</body>
+		{% block javascripts %}
+			{{ encore_entry_script_tags('app') }}
+		{% endblock %}
 	</html>

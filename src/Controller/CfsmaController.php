@@ -480,7 +480,7 @@ public function deletecohorte(int $id, Classes $cohorte, ManagerRegistry $coh,  
         
         // On copie le fichier dans le dossier uploads
         $file->move(
-            $this->getParameter('cours_directory'),
+            $this->getParameter('cours_directory2'),
             $fichier
         );
       
@@ -589,7 +589,7 @@ public function deletecohorte(int $id, Classes $cohorte, ManagerRegistry $coh,  
         
         // On copie le fichier dans le dossier uploads
         $file->move(
-            $this->getParameter('cours_directory'),
+            $this->getParameter('cours_directory2'),
             $fichier
         );
       
@@ -631,17 +631,17 @@ public function deletecohorte(int $id, Classes $cohorte, ManagerRegistry $coh,  
   }
 
  /**
- * @Route("/addcours/delete/cours/{id}", name="cours_delete_fichier", methods={"DELETE"})
+ * @Route("/addcours/delete/cours/priver/{id}", name="cours_delete_fichier", methods={"DELETE"})
  * @return Response
  */
-public function deleteFile(CoursFiles $courfile, Request $request,ManagerRegistry $doctrine):Response{
+public function deleteFilepriverc(CoursFiles $courfile, Request $request,ManagerRegistry $doctrine):Response{
   $data = json_decode($request->getContent(), true);
 
   // On vérifie si le token est valide
-  if($this->isCsrfTokenValid('delete'.$courfile->getId(), $data['token'])){
+  if($this->isCsrfTokenValid('delete'.$courfile->getId(), $data['_token'])){
       $name = $courfile->getName();
       // On supprime le fichier
-      unlink($this->getParameter('cours_directory').'/'.$name);
+      unlink($this->getParameter('cours_directory2').'/'.$name);
 
       // On supprime l'entrée de la base
       $manager = $doctrine->getManager();
@@ -866,7 +866,7 @@ public function deleteFile(CoursFiles $courfile, Request $request,ManagerRegistr
   }
 
   /**
- * @Route("/addcourspublic/delete/cours/{id}", name="courspublic_delete_fichier", methods={"DELETEP"})
+ * @Route("/addcourspublic/delete/cours/public/{id}", name="courspublic_delete_fichier", methods={"DELETE"})
  * @return Response
  */
 
@@ -874,7 +874,7 @@ public function deleteFilepublic(CoursFilesp $courfilep, Request $request,Manage
   $data = json_decode($request->getContent(), true);
 
   // On vérifie si le token est valide
-  if($this->isCsrfTokenValid('deletep'.$courfilep->getId(), $data['_token'])){
+  if($this->isCsrfTokenValid('delete'.$courfilep->getId(), $data['_token'])){
       $name = $courfilep->getName();
       // On supprime le fichier
       unlink($this->getParameter('cours_directory').'/'.$name);

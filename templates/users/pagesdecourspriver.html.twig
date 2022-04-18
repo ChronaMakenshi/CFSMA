@@ -20,6 +20,7 @@
 									{% for cour in cours %}
 										{% if cohorte.id == cour.classe.id %}
 											{% if matiere.id == cour.matiere.id %}
+											{% if cour.visible == 1 %}
 												<tr>
 													<td>{{ filiere.name }}</td>
 													<td>{{ cohorte.name }}</td>
@@ -36,6 +37,7 @@
 													</td>
 													<td>{{ cour.date|date("d/m/Y") }}</td>
 												</tr>
+												{% endif %}
 											{% endif %}
 										{% endif %}
 									{% endfor %}

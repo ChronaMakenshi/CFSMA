@@ -69,7 +69,7 @@
 														<td>
 															<h5 class="text-decoration-underline">{{ cour.name }}</h5>
 															{% for coursfile in cour.coursfiles %}
-																<a class="text-decoration-none" href="/uploads/cours/{{ coursfile.name }}">{{ coursfile.name }}</a><br>
+																<a class="text-decoration-none" href="/uploads/cours/priver/{{ coursfile.name }}">{{ coursfile.name }}</a><br>
 																{% if app.request.attributes.get('_route') == 'addcoursEdit' %}
 																	<a class="text-decoration-none text-hover-danger" href={{ path('cours_delete_fichier', {id: coursfile.id} )}} data-delete data-token={{ csrf_token('delete' ~ coursfile.id )}}>Supprimer</a>
 																	<br>

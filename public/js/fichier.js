@@ -15,7 +15,7 @@ for (let link of links){
                     "X-Requested-With": "XMLHttpRequest",
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({"token": this.dataset.token})
+                body: JSON.stringify({"_token": this.dataset.token})
             }).then(
                 // On récupère la réponse en JSON
                 response => response.json()
