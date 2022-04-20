@@ -13,7 +13,7 @@
 				<tbody class="bg-dark text-white">
 					{% for courpublic in courpublics %}
 						{% if courpublic.matierepublic.id == matierepublic.id %}
-							{% if courpublic.visible == 1 %}
+							{% if courpublic.date < date() %}
 								<tr>
 									<td>{{ matierepublic.name }}</td>
 									<td>

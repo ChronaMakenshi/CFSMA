@@ -27,7 +27,6 @@
 				{{ form_row(formCours.matiere) }}
 				<label for="exampleFormControlInput1" class="form-label">Nom de la Date :</label>
 				{{ form_row(formCours.date) }}
-				{{ form_row(formCours.visible) }}
 
 				<div class="d-flex justify-content-around mt-2">
 					<button type="submit" class="btn btn-primary btn-outline-success text-white">
@@ -82,7 +81,7 @@
 															<a class="text-decoration-none text-hover-danger" href={{ path('addcoursdelete', {id: cour.id} )}}>Supprimer</a>
 														</td>
 														<td>
-															{% if  cour.visible  is same as(true) %}
+															{% if  cour.date < date() %}
 																Visible
 															{% else %}
 																Non-Visible

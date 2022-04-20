@@ -35,11 +35,6 @@ class Courpublics
     private $matierepublic;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $visible;
-
-    /**
      * @ORM\OneToMany(targetEntity=CoursFilesp::class, mappedBy="courfilesp", orphanRemoval=true, cascade={"persist"})
      */
     private $coursFilesps;
@@ -86,18 +81,6 @@ class Courpublics
     public function setMatierepublic(?Matierepublics $matierepublic): self
     {
         $this->matierepublic = $matierepublic;
-
-        return $this;
-    }
-
-    public function getVisible(): ?bool
-    {
-        return $this->visible;
-    }
-
-    public function setVisible(bool $visible): self
-    {
-        $this->visible = $visible;
 
         return $this;
     }

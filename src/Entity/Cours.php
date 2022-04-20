@@ -27,11 +27,6 @@ class Cours
     private $name;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $visible;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Matieres::class, inversedBy="cours")
      */
     private $matiere;
@@ -69,18 +64,6 @@ class Cours
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getVisible(): ?bool
-    {
-        return $this->visible;
-    }
-
-    public function setVisible(bool $visible): self
-    {
-        $this->visible = $visible;
 
         return $this;
     }
