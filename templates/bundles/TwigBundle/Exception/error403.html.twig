@@ -1,10 +1,11 @@
 {% extends 'base.html.twig' %}
 {% block main %}
-	<h1>ERROR 403 Accés interdit</h1>
-
+	<h1>ERREUR 403 Accés interdit</h1>
 	<p>
-		The requested page couldn't be located. Checkout for any URL
-																        misspelling or
-
-	</p>
+		Nous sommes désolé mais la page que vous cherchez n'est pas ou plus 
+																        disponible. Nous vous suggérons de vous rendre sur
+		<a href={{ path('app_login') }}>la page 
+																						        d'accueil</a>
+		du site ou d'effectuer une nouvelle recherche</p>
+	<p><img src="{{ asset('build/images/Neuneu_404.gif') }}" alt=""></p>
 {% endblock %}

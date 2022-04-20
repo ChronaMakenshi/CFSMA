@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 {% block main %}
-	<h1>ERROR
-		{{ status_code }}
-		{{ status_text }}</h1>
-
+	<h1 class="title-article3">ERREUR 404 : Page Non Trouvée</h1>
 	<p>
-		{{ exception.message }}
-
-	</p>
+		Nous sommes désolé mais la page que vous cherchez n'est pas ou plus 
+																        disponible. Nous vous suggérons de vous rendre sur
+		<a href={{ path('app_login') }}>la page 
+																						        d'accueil</a>
+		du site ou d'effectuer une nouvelle recherche</p>
+	<p><img src="{{ asset('build/images/Neuneu_404.gif') }}" alt=""></p>
 {% endblock %}
