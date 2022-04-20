@@ -37,17 +37,17 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
     /**
      * @ORM\ManyToOne(targetEntity=Sections::class, inversedBy="users")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $section;
     /**
      * @ORM\ManyToOne(targetEntity=Classes::class, inversedBy="users")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $classe;
     /**
      * @ORM\ManyToOne(targetEntity=Filieres::class, inversedBy="users")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $filiere;
 
