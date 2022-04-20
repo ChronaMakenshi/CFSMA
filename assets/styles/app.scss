@@ -37,14 +37,23 @@ footer{
 
 .fond {
 	background-image: url("../styles/images/2.addb66c6.jpg");
-	background-repeat: no-repeat;	
+	background-repeat: no-repeat;
+	width: 100%;
+  height: auto;
 }
 
-@media all and (max-width: 992px) {
-	footer{
+@media all and (max-width: 197px) {
+	.footer{
 		position:relative;
 	}
 }
+
+@media all and (max-width: 992px) {
+	.footer1{
+		display: none;
+	}
+}
+
 
 @media all and (min-width: 992px) {
 
