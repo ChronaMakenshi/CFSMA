@@ -29,20 +29,15 @@ class Matieres
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Cours::class, mappedBy="matiere")
+     * @ORM\OneToMany(targetEntity=Cours::class, mappedBy="matiere", cascade={"remove"})
      */
     private $cours;
-
 
 
     public function __construct()
     {
         $this->cours = new ArrayCollection();
     }
-
-    /**
-     * @ORM\OneToMany(targetEntity=Cours::class, mappedBy="matiere", orphanRemoval=true)
-     */
 
     public function getId(): ?int
     {

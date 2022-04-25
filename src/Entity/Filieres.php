@@ -33,12 +33,12 @@ class Filieres
     private $section;
 
     /**
-     * @ORM\OneToMany(targetEntity=Classes::class, mappedBy="filiere", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Classes::class, mappedBy="filiere", cascade={"remove"})
      */
     private $classes;
 
     /**
-     * @ORM\OneToMany(targetEntity=Users::class, mappedBy="filiere")
+     * @ORM\OneToMany(targetEntity=Users::class, mappedBy="filiere",orphanRemoval=true)
      */
     private $users;
 
@@ -124,18 +124,5 @@ class Filieres
 
         return $this;
     }
-
-    public function removeUser(Users $user): self
-    {
-        if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getFiliere() === $this) {
-                $user->setFiliere(null);
-            }
-        }
-
-        return $this;
-    }
-
  
 }

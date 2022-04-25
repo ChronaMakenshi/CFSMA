@@ -15,6 +15,8 @@ use App\Entity\CoursFilesp;
 use App\Entity\Matierepublics;
 use App\Entity\Users;
 use App\Repository\SectionsRepository;
+use ContainerT3yICxw\getSectionService;
+use ContainerUjQIi83\getSectionsRepositoryService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +29,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CfsmaController extends AbstractController
@@ -110,7 +111,7 @@ class CfsmaController extends AbstractController
   public function deletecomp(int $id, Compagnies $compagnie, ManagerRegistry $comp,  EntityManagerInterface $manager): Response
   {
     $compagnie = $comp->getRepository(Compagnies::class)->find($id);
-    $this->addFlash('success', 'Votre messsage est supprimé !');
+    $this->addFlash('success', 'La compagnie ' . $compagnie->getName() . ' a été supprimé');
     $manager->remove($compagnie);
     $manager->flush();
     return $this->redirectToRoute('addcompagnie');
@@ -168,7 +169,8 @@ class CfsmaController extends AbstractController
   public function deletesection(int $id, Sections $section, ManagerRegistry $sect,  EntityManagerInterface $manager): Response
   {
     $section = $sect->getRepository(Sections::class)->find($id);
-    $this->addFlash('success', 'Votre messsage est supprimé !');
+   
+    $this->addFlash('success', 'La section ' . $section->getName() . ' a été supprimé');
     $manager->remove($section);
     $manager->flush();
     return $this->redirectToRoute('addsection');
@@ -229,7 +231,7 @@ class CfsmaController extends AbstractController
   public function deletefiliere(int $id, filieres $filiere, ManagerRegistry $fil,  EntityManagerInterface $manager): Response
   {
     $filiere = $fil->getRepository(filieres::class)->find($id);
-    $this->addFlash('success', 'Votre messsage est supprimé !');
+    $this->addFlash('success', 'La filière ' . $filiere->getName() . ' a été supprimé');
     $manager->remove($filiere);
     $manager->flush();
     return $this->redirectToRoute('addfiliere',[
@@ -292,7 +294,7 @@ class CfsmaController extends AbstractController
 public function deletecohorte(int $id, Classes $cohorte, ManagerRegistry $coh,  EntityManagerInterface $manager): Response
 {
   $cohorte = $coh->getRepository(Classes::class)->find($id);
-  $this->addFlash('success', 'Votre messsage est supprimé !');
+  $this->addFlash('success', 'La cohorte ' . $cohorte->getName() . ' a été supprimé');
   $manager->remove($cohorte);
   $manager->flush();
   return $this->redirectToRoute('addcohorte',[
@@ -342,7 +344,7 @@ public function deletecohorte(int $id, Classes $cohorte, ManagerRegistry $coh,  
   public function deletematiere(int $id, Matieres $matiere, ManagerRegistry $mat,  EntityManagerInterface $manager): Response
   {
     $matiere = $mat->getRepository(Matieres::class)->find($id);
-    $this->addFlash('success', 'Votre messsage est supprimé !');
+    $this->addFlash('success', 'La matière ' . $matiere->getName() . ' a été supprimé');
     $manager->remove($matiere);
     $manager->flush();
     return $this->redirectToRoute('addmatiere');
@@ -394,7 +396,7 @@ public function deletecohorte(int $id, Classes $cohorte, ManagerRegistry $coh,  
   public function deletematierepublic(int $id, Matierepublics $matierepublic, ManagerRegistry $matp,  EntityManagerInterface $manager): Response
   {
     $matierepublic = $matp->getRepository(Matierepublics::class)->find($id);
-    $this->addFlash('success', 'Votre messsage est supprimé !');
+    $this->addFlash('success', 'La matière ' . $matierepublic->getName() . ' a été supprimé');
     $manager->remove($matierepublic);
     $manager->flush();
     return $this->redirectToRoute('addmatierepublic');
@@ -618,7 +620,7 @@ public function deletecohorte(int $id, Classes $cohorte, ManagerRegistry $coh,  
   public function deletecours(int $id, Cours $cour, ManagerRegistry $cou,  EntityManagerInterface $manager): Response
   {
     $cour = $cou->getRepository(Cours::class)->find($id);
-    $this->addFlash('success', 'Votre cours est supprimé !');
+    $this->addFlash('success', 'La compagnie ' . $cour->getName() . ' a été supprimé');
     $manager->remove($cour);
     $manager->flush();
     return $this->redirectToRoute('addcours');
@@ -848,7 +850,7 @@ public function deleteFilepriverc(CoursFiles $courfile, Request $request,Manager
   public function deletecourspublic(int $id, Courpublics $courp, ManagerRegistry $coup,  EntityManagerInterface $manager): Response
   {
     $courp = $coup->getRepository(Courpublics::class)->find($id);
-    $this->addFlash('success', 'Votre cours est supprimé !');
+    $this->addFlash('success', 'La compagnie ' . $courp->getName() . ' a été supprimé');
     $manager->remove($courp);
     $manager->flush();
     return $this->redirectToRoute('addcourspublic');

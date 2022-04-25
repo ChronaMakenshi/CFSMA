@@ -34,4 +34,5 @@ $('#datatable').DataTable({
 
 import './fichier.js';
 
+
   

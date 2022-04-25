@@ -29,7 +29,7 @@ class Compagnies
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Sections::class, mappedBy="compagnie")
+     * @ORM\OneToMany(targetEntity=Sections::class, mappedBy="compagnie", cascade={"remove"})
      */
     private $sections;
 

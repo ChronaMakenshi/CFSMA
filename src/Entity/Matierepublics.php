@@ -29,7 +29,7 @@ class Matierepublics
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Courpublics::class, mappedBy="matierepublic", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Courpublics::class, mappedBy="matierepublic", orphanRemoval=true, cascade={"remove"})
      */
     private $courpublics;
 

@@ -42,7 +42,7 @@
 									<a class="dropdown-item text-light" href="#">
 										Gestion Régiment &raquo;
 									</a>
-									<ul class="submenu dropdown-menu bg-dark">
+									<ul class="submenu">
 										{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPERADMIN') %}
 											<li>
 												<a class="dropdown-item text-light" href="{{ path('addcompagnie') }}">Ajouter Compagnie</a>

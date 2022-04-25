@@ -5,18 +5,18 @@
 
 {% block main %}
 {% if app.user %}
-<section class="d-flex flex-lg-row flex-column justify-content-lg-between">
-	<form action="" method="post" class="mx-auto">
-		<h2 class="text-center">
-			Ajouter un Utilisateur
-		</h2>
-		{% for message in app.flashes('success') %}
-			<div class="alert alert-success">
-				{{ message }}
-			</div>
-		{% endfor %}
-		{{ form_start(registrationForm) }}
-		{{ form_row(registrationForm.username, { label: 'Nom d\'Utilisateur :'}) }}
+	<section class="d-flex flex-lg-row flex-column justify-content-lg-between">
+		<form action="" method="post" class="mx-auto">
+			<h2 class="text-center">
+				Ajouter un Utilisateur
+			</h2>
+			{% for message in app.flashes('success') %}
+				<div class="alert alert-success">
+					{{ message }}
+				</div>
+			{% endfor %}
+			{{ form_start(registrationForm) }}
+			{{ form_row(registrationForm.username, { label: 'Nom d\'Utilisateur :'}) }}
 			{{ form_row(registrationForm.plainPassword, { label: 'Mot de Passe :'}) }}
 		
 			{{ form_row(registrationForm.roles, { label: 'Nom du Rôle :' }) }}

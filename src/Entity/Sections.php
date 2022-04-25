@@ -34,12 +34,12 @@ class Sections
     private $compagnie;
 
     /**
-     * @ORM\OneToMany(targetEntity=Filieres::class, mappedBy="section")
+     * @ORM\OneToMany(targetEntity=Filieres::class, mappedBy="section", cascade={"remove"})
      */
     private $filieres;
 
     /**
-     * @ORM\OneToMany(targetEntity=Users::class, mappedBy="section")
+     * @ORM\OneToMany(targetEntity=Users::class, mappedBy="section",orphanRemoval=true)
      */
     private $users;
 
@@ -125,18 +125,5 @@ class Sections
 
         return $this;
     }
-
-    public function removeUser(Users $user): self
-    {
-        if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getSection() === $this) {
-                $user->setSection(null);
-            }
-        }
-
-        return $this;
-    }
-
  
 }
