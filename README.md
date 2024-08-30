@@ -5,7 +5,6 @@ CFSMA est une plateforme de cours interactive et captivante, conçue spécifique
 ### 🚀 Fonctionnalités Principales
 - **🎨 Design Réactif** : Interface utilisateur moderne, réactive et adaptée à tous les appareils.
 - **🎶 Gestion de Contenu** : Panneau d'administration pour gérer les cours, utilisateurs, et contenu multimédia.
-- **📈 SEO et Performance** : Optimisé pour les moteurs de recherche avec des pratiques de performance avancées.
 - **🔒 Sécurisé** : Conçu avec les meilleures pratiques de sécurité de Symfony.
 
 ### 🛠️ Installation et Configuration
